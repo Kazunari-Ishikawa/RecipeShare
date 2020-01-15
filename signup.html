@@ -25,48 +25,35 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li><a href="#">マイページ</a></li>
-            <li><a href="#">個人設定</a></li>
-            <li><a href="#">お気に入り</a></li>
-            <li><a href="#">ログアウト</a></li>
+            <li><a href="index.php">トップページ</a></li>
+            <li><a href="signup.html">ユーザー登録</a></li>
+            <li><a href="login.html">ログイン</a></li>
           </ul>
         </nav>
       </div>
     </header>
 
     <!-- メイン -->
-    <main id="mypage" class="layout-1-column">
-      <h1 class="page-title">マイページ</h1>
-      <!-- サイドバー -->
-      <section id="side-bar">
-        <div class="search-bar">
-          <form action="" method="post">
-            <p>カテゴリ</p>
-            <select name="category" id="">
-              <option value="0">選択してください</option>
-            </select>
-            <p>日付</p>
-
-            <input type="submit" value="検索" />
-          </form>
-        </div>
-      </section>
-
+    <main id="SIGNUP" class="layout-1-column">
+      <h1 class="page-title">ユーザー登録</h1>
       <!-- メインコンテンツ -->
-      <section id="contents">
-        <div class="contents-container">
-          <div class="panel-container">
-            <div class="panel">
-              <img src="" alt="" />
-              <p>日付</p>
-              <p>タイトル</p>
+      <section>
+        <div class="form-container large-form">
+          <form action="" method="post">
+            <div class="err"></div>
+            <input type="text" name="email" value="" placeholder="Email" />
+            <div class="err"></div>
+            <input type="password" name="pass" placeholder="password" />
+            <div class="err"></div>
+            <input
+              type="password"
+              name="pass_re"
+              placeholder="password(再入力)"
+            />
+            <div class="btn-container">
+              <input type="submit" value="登録" />
             </div>
-            <div class="panel">
-              <img src="" alt="" />
-              <p>日付</p>
-              <p>タイトル</p>
-            </div>
-          </div>
+          </form>
         </div>
       </section>
     </main>

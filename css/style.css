@@ -24,6 +24,7 @@ header {
   background-color: #56970a;
   opacity: 0.95;
   position: fixed;
+  top: 0;
   width: 100%;
   z-index: 1;
 }
@@ -73,6 +74,18 @@ header {
   margin-right: auto;
   margin-left: auto;
   margin-bottom: 80px;
+}
+.layout-1-column {
+  width: 980px;
+  margin-top: 48px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 80px;
+  overflow: hidden;
+}
+.page-title {
+  text-align: center;
+  margin-top: 40px;
 }
 
 /* トップ画面 */
@@ -165,4 +178,14 @@ footer p {
   position: relative;
   top: 30px;
   text-align: center;
+}
+
+#side-bar {
+  float: left;
+  width: 30%;
+  margin: 20px;
+}
+#contents {
+  float: right;
+  width: 65%;
 }
