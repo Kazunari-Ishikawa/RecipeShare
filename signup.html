@@ -40,18 +40,26 @@
       <section>
         <div class="form-container large-form">
           <form action="" method="post">
-            <div class="err"></div>
-            <input type="text" name="email" value="" placeholder="Email" />
-            <div class="err"></div>
-            <input type="password" name="pass" placeholder="password" />
-            <div class="err"></div>
-            <input
-              type="password"
-              name="pass_re"
-              placeholder="password(再入力)"
-            />
+            <div class="msg-area"></div>
+            <label for="">
+              <p>Email</p>
+              <input type="text" name="email" value="" />
+            </label>
+            <div class="msg-area"></div>
+            <label for="">
+              <p>
+                パスワード<span style="font-size: 14px;">※英数字6文字以上</span>
+              </p>
+              <input type="password" name="pass" value="" />
+            </label>
+            <div class="msg-area"></div>
+            <label for="">
+              <p>パスワード（再入力）</p>
+              <input type="password" name="pass_re" value="" />
+            </label>
+            <div class="msg-area"></div>
             <div class="btn-container">
-              <input type="submit" value="登録" />
+              <input type="submit" value="登録" class="btn btn-mid" />
             </div>
           </form>
         </div>

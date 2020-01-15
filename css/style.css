@@ -19,7 +19,9 @@ a {
   color: #555;
 }
 
-/* ヘッダー */
+/* ================================
+ヘッダー
+================================ */
 header {
   background-color: #56970a;
   opacity: 0.95;
@@ -67,7 +69,9 @@ header {
   text-decoration: underline;
 }
 
-/* 共通 */
+/* ================================
+共通
+================================ */
 .container {
   width: 980px;
   margin-top: 0;
@@ -87,8 +91,67 @@ header {
   text-align: center;
   margin-top: 40px;
 }
+.btn-container {
+  overflow: hidden;
+}
+.btn {
+  cursor: pointer;
+}
+.btn-mid {
+  max-width: 150px;
+  float: right;
+}
 
-/* トップ画面 */
+/* ================================
+フォーム関連
+================================ */
+.form-container {
+  margin: 0 auto;
+  padding: 10px;
+}
+.large-form {
+  width: 40%;
+}
+input[type="text"],
+input[type="password"] {
+  display: block;
+  height: 60px;
+  font-size: 18px;
+  box-sizing: border-box;
+  background: #eee;
+  border: none;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+}
+input[type="submit"] {
+  display: block;
+  height: 60px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background: #333;
+  color: white;
+  border: none;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  padding: 10px;
+  width: 100%;
+}
+.msg-area {
+  padding-bottom: 15px;
+}
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+.pass-save {
+  font-family: "Kosugi Maru", sans-serif;
+  color: #555;
+}
+/* ================================
+トップ画面
+================================ */
 #ABOUT {
   margin-bottom: 80px;
 }
@@ -114,7 +177,7 @@ header {
   font-size: 16px;
   margin-bottom: 80px;
 }
-.top-img .btn-container {
+.top-img-btn {
   margin-left: 50px;
 }
 .btn-sample1 {
@@ -132,7 +195,9 @@ header {
   border-bottom: none;
 }
 
-/* コンテンツ部 */
+/* ================================
+トップコンテンツ
+================================ */
 #DESCRIPTION h2 {
   display: inline-block;
   text-align: center;
@@ -168,7 +233,9 @@ header {
   color: #555;
 }
 
-/* フッター */
+/* ================================
+フッター
+================================ */
 footer {
   height: 80px;
   background: #eee;
@@ -180,6 +247,9 @@ footer p {
   text-align: center;
 }
 
+/* ================================
+
+================================ */
 #side-bar {
   float: left;
   width: 30%;
