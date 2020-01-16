@@ -1,44 +1,22 @@
 <?php
 // 共通関数の読み込み
-// require('function.php');
+require('function.php');
 
-// debugLogStart();
+debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
+debug('トップページ');
+debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
+debugLogStart();
 
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap&subset=japanese"
-      rel="stylesheet"
-    />
-    <link
-      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-      rel="stylesheet"
-    />
-    <title>わたしのご飯</title>
-  </head>
+<?php
+$siteTitle = 'トップページ';
+require('head.php');
+?>
+
   <body>
     <!-- ヘッダー -->
-    <header>
-      <div class="header-container">
-        <div class="header-title">
-          <img src="img/食事アイコン.png" alt="食事アイコン" />
-        </div>
-        <nav class="header-nav">
-          <ul>
-            <li><a href="index.php">トップページ</a></li>
-            <li><a href="signup.php">ユーザー登録</a></li>
-            <li><a href="login.php">ログイン</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <?php require('header.php'); ?>
 
     <!-- メイン -->
     <!-- トップ画面 -->
@@ -100,12 +78,4 @@
     </div>
 
     <!-- フッター -->
-    <footer>
-      <p>
-        &copy Copyright 2020 <a href="">わたしのご飯</a> All rights reserved.
-      </p>
-    </footer>
-
-    <script src="js/vendor/jquery-3.4.1.min.js"></script>
-  </body>
-</html>
+    <?php require('footer.php'); ?>

@@ -5,7 +5,6 @@ require('function.php');
 debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
 debug('ユーザー登録');
 debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
-
 debugLogStart();
 
 //================================
@@ -90,44 +89,18 @@ debug('<<<<<画面表示処理終了<<<<<');
 
 ?>
 
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap&subset=japanese"
-      rel="stylesheet"
-    />
-    <link
-      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-      rel="stylesheet"
-    />
-    <title>わたしのご飯</title>
-  </head>
+<?php
+$siteTitle = 'ユーザー登録';
+require('head.php');
+?>
 
   <body>
     <!-- ヘッダー -->
-    <header>
-      <div class="header-container">
-        <div class="header-title">
-          <img src="img/食事アイコン.png" alt="食事アイコン" />
-        </div>
-        <nav class="header-nav">
-          <ul>
-            <li><a href="index.php">トップページ</a></li>
-            <li><a href="signup.php">ユーザー登録</a></li>
-            <li><a href="login.php">ログイン</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <?php require('header.php'); ?>
 
     <!-- メイン -->
     <main id="SIGNUP" class="layout-1-column">
-      <h1 class="page-title">ユーザー登録</h1>
+      <h1 class="page-title"><?php echo $siteTitle; ?></h1>
       <!-- メインコンテンツ -->
       <section>
         <div class="form-container large-form">
@@ -159,12 +132,4 @@ debug('<<<<<画面表示処理終了<<<<<');
     </main>
 
     <!-- フッター -->
-    <footer>
-      <p>
-        &copy Copyright 2020 <a href="">わたしのご飯</a> All rights reserved.
-      </p>
-    </footer>
-
-    <script src="js/vendor/jquery-3.4.1.min.js"></script>
-  </body>
-</html>
+    <?php require('footer.php'); ?>

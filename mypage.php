@@ -1,44 +1,31 @@
-<!DOCTYPE html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="css/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Kosugi+Maru&display=swap&subset=japanese"
-      rel="stylesheet"
-    />
-    <link
-      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
-      rel="stylesheet"
-    />
-    <title>わたしのご飯</title>
-  </head>
+<?php
+// 共通関数の読み込み
+require('function.php');
+
+debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
+debug('マイページ');
+debug('◇◆◇◆◇◆◇◆◇◆◇◆◇◆◇');
+debugLogStart();
+
+// ログイン認証
+require('auth.php');
+
+?>
+
+<?php
+$siteTitle = 'マイページ';
+require('head.php');
+?>
 
   <body>
     <!-- ヘッダー -->
-    <header>
-      <div class="header-container">
-        <div class="header-title">
-          <img src="img/食事アイコン.png" alt="食事アイコン" />
-        </div>
-        <nav class="header-nav">
-          <ul>
-            <li><a href="mypage.php">マイページ</a></li>
-            <li><a href="favorite.html">お気に入り</a></li>
-            <li><a href="profEdit.html">個人設定</a></li>
-            <li><a href="logout.php">ログアウト</a></li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+    <?php require('header.php'); ?>
 
     <!-- メイン -->
     <main id="mypage" class="layout-2-column">
-      <h1 class="page-title">マイページ</h1>
+      <h1 class="page-title"><?php echo $siteTitle; ?></h1>
       <div class="regist-container">
-        <p><a href="registProduct.html">新しく料理を登録する</a></p>
+        <p><a href="registProduct.php">新しく料理を登録する</a></p>
       </div>
       <!-- サイドバー -->
       <section id="side-bar" class="layout-2-column-left">
@@ -61,28 +48,28 @@
         <div class="contents-container">
           <div class="card-container">
             <div class="card">
-              <a href="productDetail.html">
+              <a href="productDetail.php">
                 <img src="sample/IMG_20200102_194326.jpg" alt="" />
                 <p>日付</p>
                 <p>タイトル</p>
               </a>
             </div>
             <div class="card">
-              <a href="productDetail.html">
+              <a href="productDetail.php">
                 <img src="sample/IMG_20200103_193716.jpg" alt="" />
                 <p>日付</p>
                 <p>タイトル</p>
               </a>
             </div>
             <div class="card">
-              <a href="productDetail.html">
+              <a href="productDetail.php">
                 <img src="sample/IMG_20200104_183435.jpg" alt="" />
                 <p>日付</p>
                 <p>タイトル</p>
               </a>
             </div>
             <div class="card">
-              <a href="productDetail.html">
+              <a href="productDetail.php">
                 <img src="sample/IMG_20200105_185529.jpg" alt="" />
                 <p>日付</p>
                 <p>タイトル</p>
@@ -94,12 +81,4 @@
     </main>
 
     <!-- フッター -->
-    <footer>
-      <p>
-        &copy Copyright 2020 <a href="">わたしのご飯</a> All rights reserved.
-      </p>
-    </footer>
-
-    <script src="js/vendor/jquery-3.4.1.min.js"></script>
-  </body>
-</html>
+    <?php require('footer.php'); ?>
