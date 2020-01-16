@@ -1,3 +1,11 @@
+<?php
+// 共通関数の読み込み
+// require('function.php');
+
+// debugLogStart();
+
+?>
+
 <!DOCTYPE html>
 <html lang="ja">
   <head>
