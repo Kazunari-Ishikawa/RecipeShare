@@ -31,27 +31,28 @@ require('head.php');
       <section id="contents" class="layout-2-column-right">
         <div class="form-container middle-form">
           <form action="" method="post">
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('common'); ?></div>
+            <label>
               <p>名前</p>
               <input type="text" name="username" value="" />
             </label>
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('username'); ?></div>
+            <label>
               <p>性別</p>
-              <input type="radio" name="male" value="" />
+              <input type="radio" name="sex" value="male" />男性
+              <input type="radio" name="sex" value="female" />女性
             </label>
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('sex'); ?></div>
+            <label>
               <p>年齢</p>
               <input type="text" name="age" value="" />
             </label>
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('age'); ?></div>
+            <label>
               <p>Email</p>
               <input type="text" name="email" value="" />
             </label>
-            <div class="msg-area"></div>
+            <div class="msg-area"><?php echo getErrMsg('email'); ?></div>
 
             <div class="btn-container">
               <input type="submit" value="変更する" class="btn btn-mid" />
