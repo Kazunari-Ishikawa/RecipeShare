@@ -66,6 +66,7 @@ define('MSG05', '6文字以上で入力してください');
 define('MSG06', '255文字以内で入力してください');
 define('MSG07', 'パスワード（再入力が合っていません）');
 define('MSG08', 'エラーが発生しました. 時間をおいてやり直してください');
+define('MSG09', 'Emailまたはパスワードが違います');
 
 
 //================================
@@ -181,7 +182,7 @@ function queryPost($dbh, $sql, $data) {
 // その他
 //================================
 // フォーム入力保持
-function FormData($key) {
+function getFormData($key) {
   if (!empty($_POST[$key])) {
     return $_POST[$key];
   }else {
