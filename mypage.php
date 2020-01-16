@@ -25,7 +25,7 @@
         </div>
         <nav class="header-nav">
           <ul>
-            <li><a href="mypage.html">マイページ</a></li>
+            <li><a href="mypage.php">マイページ</a></li>
             <li><a href="favorite.html">お気に入り</a></li>
             <li><a href="profEdit.html">個人設定</a></li>
             <li><a href="logout.php">ログアウト</a></li>

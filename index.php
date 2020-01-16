@@ -33,8 +33,8 @@
         <nav class="header-nav">
           <ul>
             <li><a href="index.php">トップページ</a></li>
-            <li><a href="signup.html">ユーザー登録</a></li>
-            <li><a href="login.html">ログイン</a></li>
+            <li><a href="signup.php">ユーザー登録</a></li>
+            <li><a href="login.php">ログイン</a></li>
           </ul>
         </nav>
       </div>
