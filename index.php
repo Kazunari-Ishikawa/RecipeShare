@@ -33,8 +33,8 @@
         <nav class="header-nav">
           <ul>
             <li><a href="index.php">トップページ</a></li>
-            <li><a href="#">ユーザー登録</a></li>
-            <li><a href="#">ログイン</a></li>
+            <li><a href="signup.php">ユーザー登録</a></li>
+            <li><a href="login.php">ログイン</a></li>
           </ul>
         </nav>
       </div>
@@ -50,8 +50,8 @@
           <p>
             作ったご飯を登録しておくことで<br />今日のレシピに迷ったときにさっと検索できます
           </p>
-          <div class="btn-container">
-            <a href="" class="btn btn-sample1">登録する</a>
+          <div class="top-img-btn">
+            <a href="signup.html" class="btn btn-sample1">登録する</a>
           </div>
         </div>
       </div>
