@@ -195,9 +195,13 @@ input[type="checkbox"] {
 ================================ */
 #ABOUT {
   margin-bottom: 80px;
+  background: #fff;
 }
 .top-img {
   position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
 }
 .top-img img {
   width: 100%;
@@ -207,7 +211,7 @@ input[type="checkbox"] {
   position: absolute;
   top: 30%;
   left: 5%;
-  padding: 30px;
+  padding: 10px;
 }
 .top-img h1 {
   font-size: 40px;
