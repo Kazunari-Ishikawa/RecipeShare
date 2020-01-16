@@ -51,7 +51,7 @@
             作ったご飯を登録しておくことで<br />今日のレシピに迷ったときにさっと検索できます
           </p>
           <div class="top-img-btn">
-            <a href="" class="btn btn-sample1">登録する</a>
+            <a href="signup.html" class="btn btn-sample1">登録する</a>
           </div>
         </div>
       </div>
