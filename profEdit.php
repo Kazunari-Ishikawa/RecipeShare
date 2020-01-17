@@ -12,28 +12,8 @@ require('auth.php');
 
 // DBからユーザー情報を取得
 $user_id = $_SESSION['user_id'];
-
-debug('ユーザー情報を取得します');
-debug('ユーザーID：'.print_r($user_id, true));
-
-try {
-  // DB接続
-  $dbh = dbConnect();
-  // SQL作成
-  $sql = 'SELECT name, sex, age, email FROM Users WHERE id = :u_id AND delete_flg = 0';
-  $data = array(':u_id' => $user_id);
-  // クエリ実行
-  $stmt = queryPost($dbh, $sql, $data);
-  // データ取得
-  $result = $stmt->fetch();
-  debug('クエリ結果：'.print_r($result, true));
-
-} catch(Exception $e) {
-  debug('エラー：'.$e->getMessage());
-  $err_msg['common'] = MSG08;
-}
-
-$dbFormData = $result;
+$dbFormData = getUser($user_id);
+debug('ユーザー情報：'.print_r($dbUserData, true));
 
 //================================
 // 画面表示処理
@@ -55,26 +35,20 @@ if (!empty($_POST)) {
   }
   // 性別のバリデーション
   if ($sex !== $dbFormData['sex']) {
-    // male or female以外の値が送られてきた場合
-    if ($sex !== 0) {
-    } elseif ($sex !== 1) {
-    } else {
-      global $err_msg;
-      $err_msg['sex'] = '不正な値です';
-    }
+    validSex($sex, 'sex');
   }
   // 年齢のバリデーション
   if ($age !== $dbFormData['age']) {
     validMaxLen($age, 'age');
-    validHalf($age, 'age');
+    validNum($age, 'age');
   }
   // Emailのバリデーション
   if ($email !== $dbFormData['email']) {
-    validRequired($email, 'email');
     validEmailForm($email, 'email');
     validMaxLen($email, 'email');
     validMinLen($email, 'email');
     validEmailDup($email, 'email');
+    validRequired($email, 'email');
   }
 
   // バリデーションが通った場合
@@ -99,7 +73,7 @@ if (!empty($_POST)) {
 
       if ($stmt) {
         debug('DB更新成功');
-        $_SESSION['suc_msg'] = 'プロフィールを更新しました';
+        $_SESSION['suc_msg'] = SUC01;
         header("Location:mypage.php");
       } else {
         debug('DB更新失敗');
