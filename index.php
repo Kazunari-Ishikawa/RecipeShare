@@ -22,7 +22,7 @@ require('head.php');
     <!-- トップ画面 -->
     <section id="ABOUT">
       <div class="top-img">
-        <img src="img/top-pic3.jpg" alt="" />
+        <img src="img/top-pic4M.jpg" alt="" />
         <div class="top-img-container">
           <h1>わたしのご飯</h1>
           <p>
