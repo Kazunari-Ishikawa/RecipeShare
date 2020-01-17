@@ -10,6 +10,39 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
+// プロダクト全取得関数
+function getMyProduct($user_id) {
+  debug('全プロダクトを取得します');
+  debug('ユーザーID：'.print_r($user_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array(':u_id' => $user_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetchAll();
+
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+
+// 自分のプロダクトを取得
+$user_id = $_SESSION['user_id'];
+$viewData = getMyProduct($user_id);
+// debug('プロダクト一覧：'.print_r($viewData, true));
+
 ?>
 
 <?php
@@ -47,34 +80,32 @@ require('head.php');
       <section id="contents" class="layout-2-column-right">
         <div class="contents-container">
           <div class="card-container">
-            <div class="card">
-              <a href="productDetail.php">
-                <img src="sample/IMG_20200102_194326.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.php">
-                <img src="sample/IMG_20200103_193716.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.php">
-                <img src="sample/IMG_20200104_183435.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.php">
-                <img src="sample/IMG_20200105_185529.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
+            <?php
+              if (!empty($viewData)) {
+                foreach ($viewData as $key => $val) {
+            ?>
+                <div class="card">
+                  <a href="productDetail.php?p_id=<?php echo $val['id']; ?>">
+                    <img src="<?php echo $val['pic']; ?>" alt="" />
+                    <p><?php echo $val['date'] ?></p>
+                    <p><?php echo $val['main_name']; ?></p>
+                  </a>
+                </div>
+            <?php
+                }
+              } else {
+            ?>
+                <div class="card">
+                  <a href="">
+                    <img src="" alt="" />
+                    <p></p>
+                    <p></p>
+                  </a>
+                </div>
+            <?php
+              }
+            ?>
+
           </div>
         </div>
       </section>
