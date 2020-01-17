@@ -18,7 +18,7 @@ function getProductAndCategory($product_id) {
     // DB接続
     $dbh = dbConnect();
     // SQL作成
-    $sql = 'SELECT c.name, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
+    $sql = 'SELECT c.name AS category, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
     $data = array(':p_id' => $product_id);
     // クエリ実行
     $stmt = queryPost($dbh, $sql, $data);
@@ -48,11 +48,9 @@ $viewData = getProductAndCategory($product_id);
 // パラメータに不正な値が入っているかチェック
 if (empty($viewData)) {
   error_log('エラー発生:指定ページに不正な値が入りました');
-  header("Location:index.php");
+  header("Location:mypage.php");
 }
 debug('料理情報：'.print_r($viewData,true));
-
-
 
 ?>
 
@@ -76,15 +74,20 @@ require('head.php');
             <a href="mypage.php">前ページへ戻る</a>
           </div>
           <div class="detail-container-left">
-            <img src="sample/IMG_20200115_200337.jpg" alt="" />
+            <img src="<?php echo $viewData['pic']; ?>" alt="" />
           </div>
           <div class="detail-container-right">
-            <p>日付</p>
-            <p>タイトル</p>
-            <p>カテゴリ</p>
+            <p><?php echo $viewData['category']; ?></p>
+            <p>日付：</p>
+            <p>主菜：<?php echo $viewData['main_name']; ?></p>
             <div class="btn-container">
               <a href="">レシピをGoogle検索！</a>
             </div>
+            <p>副菜：<?php echo $viewData['sub_name']; ?></p>
+            <div class="btn-container">
+              <a href="">レシピをGoogle検索！</a>
+            </div>
+            <p><?php echo $viewData['comment']; ?></p>
           </div>
         </div>
       </section>
