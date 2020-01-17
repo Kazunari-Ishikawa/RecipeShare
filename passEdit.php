@@ -9,6 +9,100 @@ debugLogStart();
 
 // ログイン認証
 require('auth.php');
+// DBからユーザー情報を取得
+$user_id = $_SESSION['user_id'];
+$dbUserData = getUser($user_id);
+debug('ユーザー情報：'.print_r($dbUserData, true));
+
+//================================
+// 画面表示処理
+//================================
+// POST送信がある場合
+if (!empty($_POST)) {
+  debug('POST送信あり');
+  debug('POST：'.print_r($_POST, true));
+
+  // 変数定義
+  $pass_old = $_POST['pass_old'];
+  $pass_new = $_POST['pass_new'];
+  $pass_new_re = $_POST['pass_new_re'];
+
+  // 未入力チェック
+  validRequired($pass_old,'pass_old');
+  validRequired($pass_new,'pass_new');
+  validRequired($pass_new_re,'pass_new_re');
+
+  if (empty($err_msg)) {
+
+    // バリデーション
+    validMaxLen($pass_old, 'pass_old');
+    validMinLen($pass_old, 'pass_old');
+    validHalf($pass_old, 'pass_old');
+
+    validMinLen($pass_new, 'pass_new');
+    validMaxLen($pass_new, 'pass_new');
+    validHalf($pass_new, 'pass_new');
+
+    validMaxLen($pass_new_re, 'pass_new_re');
+    validMinLen($pass_new_re, 'pass_new_re');
+    validHalf($pass_new_re, 'pass_new_re');
+
+    validMatch($pass_new, $pass_new_re,'pass_new');
+
+    // バリデーションを通った場合
+    if (empty($err_msg)) {
+      debug('DBと照合します');
+      // 既存のパスワードと照合
+      if (password_verify($pass_old, $dbUserData['password'])) {
+        debug('DBと一致しました');
+
+        // 古いパスワードと新しいパスワードの一致チェック
+        if ($pass_old === $pass_new) {
+          debug('現在のパスワードと同じです');
+          $err_msg['pass_new'] = '現在のパスワードと同じです';
+        }
+
+        if (empty($err_msg)) {
+          debug('バリデーションOK');
+
+          debug('DBを更新します');
+          try {
+            // DB接続
+            $dbh = dbConnect();
+            // SQL作成
+            $sql = 'UPDATE Users SET password = :pass WHERE id = :u_id';
+            $data = array(
+              ':pass' => password_hash($pass_new, PASSWORD_DEFAULT),
+              ':u_id' => $user_id,
+            );
+            // クエリ実行
+            $stmt = queryPost($dbh, $sql, $data);
+            if ($stmt) {
+              debug('パスワード変更成功');
+              $_SESSION['suc_msg'] = 'パスワードを変更しました';
+              header("Location:mypage.php");
+
+            } else {
+              debug('パスワード変更失敗');
+              $err_msg['common'] = MSG08;
+            }
+
+          } catch (Exception $e) {
+            debug('エラー：'.$e->getMessage());
+            $err_msg['common'] = MSG08;
+          }
+        }
+
+      } else {
+        debug('DBと不一致');
+        $err_msg['pass_old'] = '登録されているパスワードと違います';
+      }
+    }
+  }
+}
+
+if(!empty($err_msg)) debug('エラー：'.print_r($err_msg,true));
+debug('<<<<<画面表示処理終了<<<<<');
 
 ?>
 
