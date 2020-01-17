@@ -10,6 +10,50 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
+function getProductAndCategory($product_id) {
+  debug('プロダクトとカテゴリ情報を取得します');
+  debug('プロダクトID：'.print_r($product_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT c.name, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
+    $data = array(':p_id' => $product_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+
+//================================
+// 画面表示用データ取得
+//================================
+debug('GET：'.print_r($_GET, true));
+
+// GETパラメータから料理のIDを取得
+$product_id = (!empty($_GET['p_id'])) ? $_GET['p_id'] : '';
+$viewData = getProductAndCategory($product_id);
+// パラメータに不正な値が入っているかチェック
+if (empty($viewData)) {
+  error_log('エラー発生:指定ページに不正な値が入りました');
+  header("Location:index.php");
+}
+debug('料理情報：'.print_r($viewData,true));
+
+
+
 ?>
 
 <?php
