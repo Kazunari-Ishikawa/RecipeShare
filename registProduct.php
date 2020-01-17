@@ -10,6 +10,126 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
+// DBからユーザー情報を取得
+$user_id = $_SESSION['user_id'];
+
+// DBからカテゴリデータを取得
+// カテゴリデータ取得関数
+function getCategory() {
+  debug('カテゴリデータを取得します');
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM category WHERE delete_flg = 0';
+    $data = array();
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetchAll();
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+$dbCategoryData = getCategory();
+// debug('カテゴリデータ：'.print_r($dbCategoryData, true));
+
+//================================
+// 画面表示処理
+//================================
+// POST送信がある場合
+if (!empty($_POST)) {
+  debug('POST送信あり');
+  debug('POST：'.print_r($_POST, true));
+  debug('FILE：'.print_r($_FILES, true));
+
+  // 変数定義
+  $category = $_POST['category'];
+  $mainName = $_POST['main-name'];
+  $subName = $_POST['sub-name'];
+  $comment = $_POST['comment'];
+  // $pic = $_POST['pic'];
+
+  // 未入力チェック
+  validRequired($mainName, 'main-name');
+
+  // 各項目のバリデーション
+  if (empty($err_msg)) {
+    // カテゴリ
+
+    // 主菜
+    validMaxLen($mainName, 'main-name');
+
+    // 副菜
+    validMaxLen($subName, 'sub-name');
+
+    // コメント
+    validMaxLen($comment, 'comment');
+
+    // 写真
+
+    // バリデーションを通った場合
+    if (empty($err_msg)) {
+      debug('バリデーションOK');
+
+      debug('DBへ登録します');
+      try {
+        // DB接続
+        $dbh = dbConnect();
+        // SQL作成
+        $sql = 'INSERT INTO Recipe(category_id,main_name,sub_name,comment,pic,user_id,created_at) VALUES (:c_id,:main_name,:sub_name,:comment,:pic,:u_id,:created_at)';
+        $data = array(
+          ':category_id' => $category,
+          ':main_name' => $mainName,
+          ':sub_name' => $subName,
+          ':comment' => $comment,
+
+          ':created_at' => date('Y-m-d H:i:s'),
+        );
+        // クエリ実行
+        // $stmt = queryPost($dbh, $sql, $data);
+        // if ($stmt) {
+        //   debug('登録成功');
+        //   $_SESSION['suc_msg'] = 'ご飯を登録しました';
+        //   header("Location:mypage.php");
+        // } else {
+        //   debug('登録失敗');
+        //   $err_msg['common'] = MSG08;
+        // }
+
+
+
+
+
+
+
+
+
+      } catch (Exception $e) {
+        debug('エラー：'.$e->getMessage());
+        $err_msg['common'] = MSG08;
+      }
+
+    } else {
+      debug('バリデーションNG');
+    }
+
+  } else {
+    debug('バリデーションNG');
+  }
+}
+
+if(!empty($err_msg)) debug('エラー：'.print_r($err_msg,true));
+debug('<<<<<画面表示処理終了<<<<<');
+
 ?>
 
 <?php
@@ -46,7 +166,7 @@ require('head.php');
             <div class="msg-area"></div>
             <label for="">
               <p>コメント</p>
-              <input type="text" name="main-name" value="" />
+              <input type="text" name="comment" value="" />
             </label>
             <div class="msg-area"></div>
             <label for="">
