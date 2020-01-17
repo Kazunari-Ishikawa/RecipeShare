@@ -201,7 +201,7 @@ input[type="checkbox"] {
   position: relative;
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  width: 100%;
 }
 .top-img img {
   width: 100%;
@@ -210,20 +210,25 @@ input[type="checkbox"] {
 .top-img-container {
   position: absolute;
   top: 30%;
-  left: 5%;
+  left: 32%;
   padding: 10px;
 }
 .top-img h1 {
   font-size: 40px;
-  margin-bottom: 80px;
-  letter-spacing: 0.2em;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  letter-spacing: 0.15em;
+  text-align: center;
 }
 .top-img p {
   font-size: 16px;
-  margin-bottom: 80px;
+  margin-bottom: 50px;
+  text-align: center;
 }
 .top-img-btn {
-  margin-left: 50px;
+  position: relative;
+  left: 120px;
+  /* margin-left: 50px; */
 }
 .btn-sample1 {
   display: inline-block;
