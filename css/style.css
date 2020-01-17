@@ -365,3 +365,11 @@ footer p {
 .detail-container img {
   width: 100%;
 }
+
+/* ================================
+登録編集画面
+================================ */
+.prev-img {
+  display: inline-block;
+  width: 100%;
+}

@@ -10,112 +10,9 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
-// DBからカテゴリデータを取得
-// カテゴリデータ取得関数
-function getCategory() {
-  debug('カテゴリデータを取得します');
-
-  try {
-    // DB接続
-    $dbh = dbConnect();
-    // SQL作成
-    $sql = 'SELECT * FROM category WHERE delete_flg = 0';
-    $data = array();
-    // クエリ実行
-    $stmt = queryPost($dbh, $sql, $data);
-    // データ取得
-    $result = $stmt->fetchAll();
-    if ($stmt) {
-      return $result;
-    } else {
-      return false;
-    }
-
-  } catch(Exception $e) {
-    debug('エラー：'.$e->getMessage());
-    $err_msg['common'] = MSG08;
-  }
-}
-$dbCategoryData = getCategory();
-
-// 画像アップロード関数
-function uploadImg($file, $key) {
-  debug('画像アップロード開始');
-
-  if (isset($file['error']) && is_int($file['error'])) {
-
-    try {
-      // ファイルのエラーコード確認
-      switch ($file['error']) {
-        case UPLOAD_ERR_OK:
-          break;
-        case UPLOAD_ERR_INI_SIZE:
-          throw new RuntimeException('ファイルサイズが大きすぎます');
-        case UPLOAD_ERR_FORM_SIZE:
-          throw new RuntimeException('ファイルサイズが大きすぎます');
-        case UPLOAD_ERR_NO_FILE:
-          throw new RuntimeException('ファイルが選択されていません');
-        default :
-          throw new RuntimeException('予期せぬエラーが発生しました');
-      }
-
-      // ファイルのMIMEタイプ確認
-      $type = @exif_imagetype($file['tmp_name']);
-      if (!in_array($type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
-        throw new RuntimeException('画像形式が未対応です');
-      }
-
-      // ハッシュをつけてファイル名を保存する
-      $path = 'uploads/'.sha1_file($file['tmp_name']).image_type_to_extension($type);
-      if (!move_uploaded_file($file['tmp_name'], $path)) {
-        throw new RuntimeException('ファイル保存時にエラーが発生しました');
-      }
-
-      // 保存したファイルの権限を変更する
-      chmod($path, 0644);
-
-      debug('アップロード完了');
-      debug('ファイルパス：'.print_r($path,true));
-      return $path;
-
-    } catch (RuntimeException $e) {
-      debug('エラー：'.$e->getMessage());
-      global $err_msg;
-      $err_msg[$key] = $e->getMessage();
-
-    }
-  }
-}
-
-// プロダクト情報取得関数
-function getProduct($product_id) {
-  debug('プロダクト情報を取得します');
-  debug('プロダクトID：'.print_r($product_id, true));
-
-  try {
-    // DB接続
-    $dbh = dbConnect();
-    // SQL作成
-    $sql = 'SELECT * FROM Recipe WHERE id = :p_id AND delete_flg = 0';
-    $data = array(':p_id' => $product_id);
-    // クエリ実行
-    $stmt = queryPost($dbh, $sql, $data);
-    // データ取得
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($stmt) {
-      return $result;
-    } else {
-      return false;
-    }
-
-  } catch(Exception $e) {
-    debug('エラー：'.$e->getMessage());
-    $err_msg['common'] = MSG08;
-  }
-}
-//==============================================================================================
-
+//================================
+// 画面表示用データ取得
+//================================
 debug('GET：'.print_r($_GET, true));
 
 // 新規登録または編集を判別するフラグ（編集=>1 新規登録=>0）
@@ -125,6 +22,9 @@ $edit_flg = (!empty($_GET['p_id'])) ? true : false;
 $product_id = (!empty($_GET['p_id'])) ? $_GET['p_id'] : '';
 $dbProductData = getProduct($product_id);
 debug('料理情報：'.print_r($dbProductData,true));
+
+// DBからカテゴリデータを取得
+$dbCategoryData = getCategory();
 
 //================================
 // 画面表示処理
@@ -136,7 +36,7 @@ if (!empty($_POST)) {
   debug('FILE：'.print_r($_FILES, true));
 
   // 変数定義
-  $category = $_POST['category'];
+  $category = $_POST['category_id'];
   $mainName = $_POST['main-name'];
   $subName = $_POST['sub-name'];
   $comment = $_POST['comment'];
@@ -149,10 +49,7 @@ if (!empty($_POST)) {
   // 新規登録の場合
   if ($edit_flg == 0) {
     // カテゴリ
-    if (!preg_match("/^[0-9]+$/", $category)) {
-      global $err_msg;
-      $err_msg['category'] = '不正な値です';
-    }
+    validSelect($category, 'category_id');
     // 主菜
     validMaxLen($mainName, 'main-name');
     validRequired($mainName, 'main-name');
@@ -165,10 +62,7 @@ if (!empty($_POST)) {
     // 編集の場合DBと不一致の場合にバリデーションを行う
     // カテゴリ
     if ($category != $dbProductData['category_id']) {
-      if (!preg_match("/^[0-9]+$/", $category)) {
-        global $err_msg;
-        $err_msg['category'] = '不正な値です';
-      }
+      validSelect($category, 'category_id');
     }
     // 主菜
     if ($mainName !== $dbProductData['main_name']) {
@@ -229,7 +123,7 @@ if (!empty($_POST)) {
       $stmt = queryPost($dbh, $sql, $data);
       if ($stmt) {
         debug('登録成功');
-        $_SESSION['suc_msg'] = '登録しました';
+        $_SESSION['suc_msg'] = SUC03;
         header("Location:mypage.php");
       } else {
         debug('登録失敗');
@@ -272,28 +166,28 @@ require('head.php');
             <div class="msg-area"></div>
             <label>
               <p>カテゴリ</p>
-              <select name='category'>
+              <select name='category_id'>
                 <option value="0">選択してください</option>
                 <?php
                   if (!empty($dbCategoryData)) {
                     foreach ($dbCategoryData as $key => $val) {
                 ?>
-                      <option value="<?php echo $val['id']; ?>" <?php if (!empty($_POST['category']) && $_POST['category'] == $val['id']) echo 'selected'; ?>><?php echo $val['name']; ?></option>
+                      <option value="<?php echo $val['id']; ?>" <?php if (getFormData('category_id') == $val['id']) echo 'selected'; ?>><?php echo $val['name']; ?></option>
                 <?php
                     }
                   }
                 ?>
               </select>
             </label>
-            <div class="msg-area"><?php echo getErrMsg('category'); ?></div>
+            <div class="msg-area"><?php echo getErrMsg('category_id'); ?></div>
             <label>
               <p>主菜</p>
-              <input type="text" name="main-name" value="<?php echo getFormData('main-name'); ?>" />
+              <input type="text" name="main-name" value="<?php echo getFormData('main_name'); ?>" />
             </label>
             <div class="msg-area"><?php echo getErrMsg('main-name'); ?></div>
             <label>
               <p>副菜</p>
-              <input type="text" name="sub-name" value="<?php echo getFormData('sub-name'); ?>" />
+              <input type="text" name="sub-name" value="<?php echo getFormData('sub_name'); ?>" />
             </label>
             <div class="msg-area"><?php echo getErrMsg('sub-name'); ?></div>
             <label>
@@ -305,6 +199,7 @@ require('head.php');
               <p>写真</p>
               <input type="file" name="pic" accept="image/*" />
             </label>
+            <img src="<?php echo getFormData('pic'); ?>" alt="" class="prev-img">
             <div class="msg-area"><?php echo getErrMsg('pic'); ?></div>
 
             <div class="btn-container">
