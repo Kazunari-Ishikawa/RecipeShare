@@ -67,7 +67,13 @@ define('MSG06', '255文字以内で入力してください');
 define('MSG07', 'パスワード（再入力が合っていません）');
 define('MSG08', 'エラーが発生しました. 時間をおいてやり直してください');
 define('MSG09', 'Emailまたはパスワードが違います');
+define('MSG10', '不正な値です');
+define('MSG11', '半角数字のみ利用できます');
+define('MSG12', '現在のパスワードと同じです');
+define('MSG13', '登録されているパスワードと違います');
 
+define('SUC01', 'プロフィールを更新しました');
+define('SUC02', 'パスワードを変更しました');
 
 //================================
 // バリデーション関数
@@ -137,6 +143,29 @@ function validMatch($str1, $str2, $key) {
     $err_msg[$key] = MSG07;
   }
 }
+// パスワード関連のチェック
+function validPass($str, $key) {
+  validMinLen($str, $key);
+  validMaxLen($str, $key);
+  validHalf($str, $key);
+}
+// 性別チェック
+function validSex($num, $key) {
+  // male or female以外の値が送られてきた場合
+  if ($num !== 0) {
+  } elseif ($num !== 1) {
+  } else {
+    global $err_msg;
+    $err_msg[$key] = MSG10;
+  }
+}
+// 半角数字チェック
+function validNum($str, $key) {
+  if (!preg_match("/^[0-9]+$/", $str)) {
+    global $err_msg;
+    $err_msg[$key] = MSG11;
+  }
+}
 
 
 //================================
@@ -175,7 +204,32 @@ function queryPost($dbh, $sql, $data) {
     debug('クエリ成功');
     return $stmt;
   }
+}
+// ユーザー情報取得関数
+function getUser($user_id) {
+  debug('ユーザー情報を取得します');
+  debug('ユーザーID：'.print_r($user_id, true));
 
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM Users WHERE id = :u_id AND delete_flg = 0';
+    $data = array(':u_id' => $user_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
 }
 
 //================================
@@ -183,9 +237,15 @@ function queryPost($dbh, $sql, $data) {
 //================================
 // フォーム入力保持
 function getFormData($key) {
+  global $dbUserData;
+  // DBにデータがある場合、それを返す
+  if (!empty($dbUserData[$key])) {
+    return $dbUserData[$key];
+  }
   if (!empty($_POST[$key])) {
     return $_POST[$key];
-  }else {
+  }
+  if (empty($_POST[$key])) {
     return null;
   }
 }
