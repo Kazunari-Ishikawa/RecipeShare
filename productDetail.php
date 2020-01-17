@@ -54,11 +54,11 @@ require('head.php');
             <p>日付：</p>
             <p>主菜：<?php echo $viewData['main_name']; ?></p>
             <div class="btn-container">
-              <a href="">レシピをGoogle検索！</a>
+              <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['main_name']; ?>+レシピ">レシピをGoogle検索！</a>
             </div>
             <p>副菜：<?php echo $viewData['sub_name']; ?></p>
             <div class="btn-container">
-              <a href="">レシピをGoogle検索！</a>
+            <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['sub_name']; ?>+レシピ">レシピをGoogle検索！</a>
             </div>
             <p><?php echo $viewData['comment']; ?></p>
           </div>

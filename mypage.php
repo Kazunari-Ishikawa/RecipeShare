@@ -41,7 +41,8 @@ function getMyProduct($user_id) {
 // 自分のプロダクトを取得
 $user_id = $_SESSION['user_id'];
 $viewData = getMyProduct($user_id);
-// debug('プロダクト一覧：'.print_r($viewData, true));
+
+$dbCategoryData = getCategory();
 
 ?>
 
@@ -65,10 +66,16 @@ require('head.php');
         <div class="search-bar">
           <form action="" method="post">
             <p>カテゴリ</p>
-            <select name="category" id="">
+            <select name="category">
               <option value="0">選択してください</option>
+              <?php
+                foreach ($dbCategoryData as $key => $val) {
+              ?>
+                  <option value="<?php echo $val['id']; ?>" <?php if (getFormData('category_id') == $val['id']) echo 'selected'; ?>><?php echo $val['name']; ?></option>
+              <?php
+                }
+              ?>
             </select>
-            <p>日付</p>
             <div class="btn-container">
               <input type="submit" value="検索" class="btn btn-center" />
             </div>
