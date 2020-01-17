@@ -74,6 +74,7 @@ define('MSG13', '登録されているパスワードと違います');
 
 define('SUC01', 'プロフィールを更新しました');
 define('SUC02', 'パスワードを変更しました');
+define('SUC03', 'ご飯を登録しました');
 
 //================================
 // バリデーション関数
@@ -166,7 +167,13 @@ function validNum($str, $key) {
     $err_msg[$key] = MSG11;
   }
 }
-
+// カテゴリセレクトボックスチェック
+function validSelect($str, $key) {
+  if (!preg_match("/^[0-9]+$/", $str)) {
+    global $err_msg;
+    $err_msg[$key] = MSG10;
+  }
+}
 
 //================================
 // データベース
@@ -231,6 +238,59 @@ function getUser($user_id) {
     $err_msg['common'] = MSG08;
   }
 }
+// プロダクト情報取得関数
+function getProduct($product_id) {
+  debug('プロダクト情報を取得します');
+  debug('プロダクトID：'.print_r($product_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM Recipe WHERE id = :p_id AND delete_flg = 0';
+    $data = array(':p_id' => $product_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+// カテゴリデータ取得関数
+function getCategory() {
+  debug('カテゴリデータを取得します');
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM category WHERE delete_flg = 0';
+    $data = array();
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetchAll();
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+
 
 //================================
 // その他
@@ -238,6 +298,10 @@ function getUser($user_id) {
 // フォーム入力保持
 function getFormData($key) {
   global $dbUserData;
+  global $dbProductData;
+  if (!empty($_GET)) {
+    return $dbProductData[$key];
+  }
   // DBにデータがある場合、それを返す
   if (!empty($dbUserData[$key])) {
     return $dbUserData[$key];
@@ -247,5 +311,53 @@ function getFormData($key) {
   }
   if (empty($_POST[$key])) {
     return null;
+  }
+}
+// 画像アップロード関数
+function uploadImg($file, $key) {
+  debug('画像アップロード開始');
+
+  if (isset($file['error']) && is_int($file['error'])) {
+
+    try {
+      // ファイルのエラーコード確認
+      switch ($file['error']) {
+        case UPLOAD_ERR_OK:
+          break;
+        case UPLOAD_ERR_INI_SIZE:
+          throw new RuntimeException('ファイルサイズが大きすぎます');
+        case UPLOAD_ERR_FORM_SIZE:
+          throw new RuntimeException('ファイルサイズが大きすぎます');
+        case UPLOAD_ERR_NO_FILE:
+          throw new RuntimeException('ファイルが選択されていません');
+        default :
+          throw new RuntimeException('予期せぬエラーが発生しました');
+      }
+
+      // ファイルのMIMEタイプ確認
+      $type = @exif_imagetype($file['tmp_name']);
+      if (!in_array($type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
+        throw new RuntimeException('画像形式が未対応です');
+      }
+
+      // ハッシュをつけてファイル名を保存する
+      $path = 'uploads/'.sha1_file($file['tmp_name']).image_type_to_extension($type);
+      if (!move_uploaded_file($file['tmp_name'], $path)) {
+        throw new RuntimeException('ファイル保存時にエラーが発生しました');
+      }
+
+      // 保存したファイルの権限を変更する
+      chmod($path, 0644);
+
+      debug('アップロード完了');
+      debug('ファイルパス：'.print_r($path,true));
+      return $path;
+
+    } catch (RuntimeException $e) {
+      debug('エラー：'.$e->getMessage());
+      global $err_msg;
+      $err_msg[$key] = $e->getMessage();
+
+    }
   }
 }
