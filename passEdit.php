@@ -35,17 +35,9 @@ if (!empty($_POST)) {
   if (empty($err_msg)) {
 
     // バリデーション
-    validMaxLen($pass_old, 'pass_old');
-    validMinLen($pass_old, 'pass_old');
-    validHalf($pass_old, 'pass_old');
-
-    validMinLen($pass_new, 'pass_new');
-    validMaxLen($pass_new, 'pass_new');
-    validHalf($pass_new, 'pass_new');
-
-    validMaxLen($pass_new_re, 'pass_new_re');
-    validMinLen($pass_new_re, 'pass_new_re');
-    validHalf($pass_new_re, 'pass_new_re');
+    validPass($pass_old,'pass_old');
+    validPass($pass_new,'pass_new');
+    validPass($pass_new_re,'pass_new_re');
 
     validMatch($pass_new, $pass_new_re,'pass_new');
 
@@ -59,7 +51,7 @@ if (!empty($_POST)) {
         // 古いパスワードと新しいパスワードの一致チェック
         if ($pass_old === $pass_new) {
           debug('現在のパスワードと同じです');
-          $err_msg['pass_new'] = '現在のパスワードと同じです';
+          $err_msg['pass_new'] = MSG12;
         }
 
         if (empty($err_msg)) {
@@ -79,7 +71,7 @@ if (!empty($_POST)) {
             $stmt = queryPost($dbh, $sql, $data);
             if ($stmt) {
               debug('パスワード変更成功');
-              $_SESSION['suc_msg'] = 'パスワードを変更しました';
+              $_SESSION['suc_msg'] = SUC02;
               header("Location:mypage.php");
 
             } else {
@@ -95,7 +87,7 @@ if (!empty($_POST)) {
 
       } else {
         debug('DBと不一致');
-        $err_msg['pass_old'] = '登録されているパスワードと違います';
+        $err_msg['pass_old'] = MSG13;
       }
     }
   }
@@ -125,22 +117,22 @@ require('head.php');
       <section id="contents" class="layout-2-column-right">
         <div class="form-container middle-form">
           <form action="" method="post">
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('common'); ?></div>
+            <label>
               <p>現在のパスワード</p>
               <input type="password" name="pass_old" value="" />
             </label>
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('pass_old'); ?></div>
+            <label>
               <p>新しいパスワード</p>
               <input type="password" name="pass_new" value="" />
             </label>
-            <div class="msg-area"></div>
-            <label for="">
+            <div class="msg-area"><?php echo getErrMsg('pass_new'); ?></div>
+            <label>
               <p>新しいパスワード（再入力）</p>
               <input type="password" name="pass_new_re" value="" />
             </label>
-            <div class="msg-area"></div>
+            <div class="msg-area"><?php echo getErrMsg('pass_new_re'); ?></div>
 
             <div class="btn-container">
               <input type="submit" value="変更する" class="btn btn-mid" />
