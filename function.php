@@ -79,14 +79,6 @@ define('SUC03', 'ご飯を登録しました');
 //================================
 // バリデーション関数
 //================================
-// エラーメッセージ表示
-function getErrMsg($key){
-  global $err_msg;
-  if (!empty($err_msg[$key])) {
-    return $err_msg[$key];
-  }
-}
-
 // 未入力チェック
 function validRequired($str, $key) {
   if ($str === '') {
@@ -265,6 +257,33 @@ function getProduct($product_id) {
     $err_msg['common'] = MSG08;
   }
 }
+// プロダクト＋カテゴリ情報取得関数
+function getProductAndCategory($product_id) {
+  debug('プロダクトとカテゴリ情報を取得します');
+  debug('プロダクトID：'.print_r($product_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT c.name AS category, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
+    $data = array(':p_id' => $product_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
 // カテゴリデータ取得関数
 function getCategory() {
   debug('カテゴリデータを取得します');
@@ -291,10 +310,16 @@ function getCategory() {
   }
 }
 
-
 //================================
 // その他
 //================================
+// エラーメッセージ表示
+function getErrMsg($key){
+  global $err_msg;
+  if (!empty($err_msg[$key])) {
+    return $err_msg[$key];
+  }
+}
 // フォーム入力保持
 function getFormData($key) {
   global $dbUserData;

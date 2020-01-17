@@ -10,6 +10,21 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
+//================================
+// 画面表示用データ取得
+//================================
+debug('GET：'.print_r($_GET, true));
+
+// GETパラメータから料理のIDを取得
+$product_id = (!empty($_GET['p_id'])) ? $_GET['p_id'] : '';
+$viewData = getProductAndCategory($product_id);
+// パラメータに不正な値が入っているかチェック
+if (empty($viewData)) {
+  error_log('エラー発生:指定ページに不正な値が入りました');
+  header("Location:mypage.php");
+}
+debug('料理情報：'.print_r($viewData,true));
+
 ?>
 
 <?php
@@ -29,18 +44,23 @@ require('head.php');
       <section id="detail">
         <div class="detail-container">
           <div class="detail-container-top">
-            <a href="mypage.html">前ページへ戻る</a>
+            <a href="mypage.php">前ページへ戻る</a>
           </div>
           <div class="detail-container-left">
-            <img src="sample/IMG_20200115_200337.jpg" alt="" />
+            <img src="<?php echo $viewData['pic']; ?>" alt="" />
           </div>
           <div class="detail-container-right">
-            <p>日付</p>
-            <p>タイトル</p>
-            <p>カテゴリ</p>
+            <p><?php echo $viewData['category']; ?></p>
+            <p>日付：</p>
+            <p>主菜：<?php echo $viewData['main_name']; ?></p>
             <div class="btn-container">
               <a href="">レシピをGoogle検索！</a>
             </div>
+            <p>副菜：<?php echo $viewData['sub_name']; ?></p>
+            <div class="btn-container">
+              <a href="">レシピをGoogle検索！</a>
+            </div>
+            <p><?php echo $viewData['comment']; ?></p>
           </div>
         </div>
       </section>
