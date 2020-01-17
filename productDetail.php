@@ -10,33 +10,6 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
-function getProductAndCategory($product_id) {
-  debug('プロダクトとカテゴリ情報を取得します');
-  debug('プロダクトID：'.print_r($product_id, true));
-
-  try {
-    // DB接続
-    $dbh = dbConnect();
-    // SQL作成
-    $sql = 'SELECT c.name AS category, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
-    $data = array(':p_id' => $product_id);
-    // クエリ実行
-    $stmt = queryPost($dbh, $sql, $data);
-    // データ取得
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if ($stmt) {
-      return $result;
-    } else {
-      return false;
-    }
-
-  } catch(Exception $e) {
-    debug('エラー：'.$e->getMessage());
-    $err_msg['common'] = MSG08;
-  }
-}
-
 //================================
 // 画面表示用データ取得
 //================================
