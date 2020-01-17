@@ -10,7 +10,6 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
-// DBからユーザー情報を取得
 $user_id = $_SESSION['user_id'];
 
 // DBからカテゴリデータを取得
@@ -40,7 +39,55 @@ function getCategory() {
   }
 }
 $dbCategoryData = getCategory();
-// debug('カテゴリデータ：'.print_r($dbCategoryData, true));
+
+// 画像アップロード関数
+function uploadImg($file, $key) {
+  debug('画像アップロード開始');
+
+  if (isset($file['error']) && is_int($file['error'])) {
+
+    try {
+      // ファイルのエラーコード確認
+      switch ($file['error']) {
+        case UPLOAD_ERR_OK:
+          break;
+        case UPLOAD_ERR_INI_SIZE:
+          throw new RuntimeException('ファイルサイズが大きすぎます');
+        case UPLOAD_ERR_FORM_SIZE:
+          throw new RuntimeException('ファイルサイズが大きすぎます');
+        case UPLOAD_ERR_NO_FILE:
+          throw new RuntimeException('ファイルが選択されていません');
+        default :
+          throw new RuntimeException('予期せぬエラーが発生しました');
+      }
+
+      // ファイルのMIMEタイプ確認
+      $type = @exif_imagetype($file['tmp_name']);
+      if (!in_array($type, [IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_PNG], true)) {
+        throw new RuntimeException('画像形式が未対応です');
+      }
+
+      // ハッシュをつけてファイル名を保存する
+      $path = 'uploads/'.sha1_file($file['tmp_name']).image_type_to_extension($type);
+      if (!move_uploaded_file($file['tmp_name'], $path)) {
+        throw new RuntimeException('ファイル保存時にエラーが発生しました');
+      }
+
+      // 保存したファイルの権限を変更する
+      chmod($path, 0644);
+
+      debug('アップロード完了');
+      debug('ファイルパス：'.print_r($path,true));
+      return $path;
+
+    } catch (RuntimeException $e) {
+      debug('エラー：'.$e->getMessage());
+      global $err_msg;
+      $err_msg[$key] = $e->getMessage();
+
+    }
+  }
+}
 
 //================================
 // 画面表示処理
@@ -52,11 +99,12 @@ if (!empty($_POST)) {
   debug('FILE：'.print_r($_FILES, true));
 
   // 変数定義
-  // $category = $_POST['category'];
+  $category = $_POST['category'];
   $mainName = $_POST['main-name'];
   $subName = $_POST['sub-name'];
   $comment = $_POST['comment'];
-  // $pic = $_POST['pic'];
+  // 画像をアップロードしパスを保存
+  $pic = (!empty($_FILES['pic'])) ? uploadImg($_FILES['pic'], 'pic') : '';
 
   // 未入力チェック
   validRequired($mainName, 'main-name');
@@ -64,17 +112,16 @@ if (!empty($_POST)) {
   // 各項目のバリデーション
   if (empty($err_msg)) {
     // カテゴリ
-
+    if (!preg_match("/^[0-9]+$/", $category)) {
+      global $err_msg;
+      $err_msg['category'] = '不正な値です';
+    }
     // 主菜
     validMaxLen($mainName, 'main-name');
-
     // 副菜
     validMaxLen($subName, 'sub-name');
-
-    // コメント
-    validMaxLen($comment, 'comment');
-
-    // 写真
+    // コメント（コメントは最大500文字まで）
+    validMaxLen($comment, 'comment', 500);
 
     // バリデーションを通った場合
     if (empty($err_msg)) {
@@ -87,31 +134,25 @@ if (!empty($_POST)) {
         // SQL作成
         $sql = 'INSERT INTO Recipe(category_id,main_name,sub_name,comment,pic,user_id,created_at) VALUES (:c_id,:main_name,:sub_name,:comment,:pic,:u_id,:created_at)';
         $data = array(
-          // ':category_id' => $category,
+          ':c_id' => $category,
           ':main_name' => $mainName,
           ':sub_name' => $subName,
           ':comment' => $comment,
-
+          ':pic' => $pic,
+          ':u_id' => $user_id,
           ':created_at' => date('Y-m-d H:i:s'),
         );
+        debug('$data：'.print_r($data,true));
         // クエリ実行
-        // $stmt = queryPost($dbh, $sql, $data);
-        // if ($stmt) {
-        //   debug('登録成功');
-        //   $_SESSION['suc_msg'] = 'ご飯を登録しました';
-        //   header("Location:mypage.php");
-        // } else {
-        //   debug('登録失敗');
-        //   $err_msg['common'] = MSG08;
-        // }
-
-
-
-
-
-
-
-
+        $stmt = queryPost($dbh, $sql, $data);
+        if ($stmt) {
+          debug('登録成功');
+          $_SESSION['suc_msg'] = 'ご飯を登録しました';
+          header("Location:mypage.php");
+        } else {
+          debug('登録失敗');
+          $err_msg['common'] = MSG08;
+        }
 
       } catch (Exception $e) {
         debug('エラー：'.$e->getMessage());
