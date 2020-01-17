@@ -12,7 +12,7 @@ require('auth.php');
 
 // DBからユーザー情報を取得
 $user_id = $_SESSION['user_id'];
-$dbFormData = getUser($user_id);
+$dbUserData = getUser($user_id);
 debug('ユーザー情報：'.print_r($dbUserData, true));
 
 //================================
@@ -23,27 +23,27 @@ if (!empty($_POST)) {
   debug('POST送信あり');
   debug('POST：'.print_r($_POST, true));
   // 変数定義
-  $name = $_POST['username'];
+  $name = $_POST['name'];
   $sex = (isset($_POST['sex'])) ? $_POST['sex'] : '';
   $age = (isset($_POST['age'])) ? $_POST['age'] : '';
   $email = $_POST['email'];
 
   // DBとのデータが異なる場合バリデーションを行う
   // 名前
-  if ($name !== $dbFormData['name']) {
-    validMaxLen($name, 'username');
+  if ($name !== $dbUserData['name']) {
+    validMaxLen($name, 'name');
   }
   // 性別のバリデーション
-  if ($sex !== $dbFormData['sex']) {
+  if ($sex !== $dbUserData['sex']) {
     validSex($sex, 'sex');
   }
   // 年齢のバリデーション
-  if ($age !== $dbFormData['age']) {
+  if ($age !== $dbUserData['age']) {
     validMaxLen($age, 'age');
     validNum($age, 'age');
   }
   // Emailのバリデーション
-  if ($email !== $dbFormData['email']) {
+  if ($email !== $dbUserData['email']) {
     validEmailForm($email, 'email');
     validMaxLen($email, 'email');
     validMinLen($email, 'email');
@@ -117,23 +117,25 @@ require('head.php');
             <div class="msg-area"><?php echo getErrMsg('common'); ?></div>
             <label>
               <p>名前</p>
-              <input type="text" name="username" value="" />
+              <input type="text" name="name" value="<?php echo getFormData('name'); ?>" />
             </label>
-            <div class="msg-area"><?php echo getErrMsg('username'); ?></div>
-            <label>
+            <div class="msg-area"><?php echo getErrMsg('name'); ?></div>
               <p>性別</p>
-              <input type="radio" name="sex" value="0" checked/>男性
-              <input type="radio" name="sex" value="1" />女性
+            <label>
+              <input type="radio" name="sex" value="0" <?php if ($dbUserData['sex'] == 0) echo 'checked'; ?> />男性
+            </label>
+            <label >
+              <input type="radio" name="sex" value="1" <?php if ($dbUserData['sex'] == 1) echo 'checked'; ?> />女性
             </label>
             <div class="msg-area"><?php echo getErrMsg('sex'); ?></div>
             <label>
               <p>年齢</p>
-              <input type="text" name="age" value="" />
+              <input type="text" name="age" value="<?php echo getFormData('age'); ?>" />
             </label>
             <div class="msg-area"><?php echo getErrMsg('age'); ?></div>
             <label>
               <p>Email</p>
-              <input type="text" name="email" value="" />
+              <input type="text" name="email" value="<?php echo getFormData('email'); ?>" />
             </label>
             <div class="msg-area"><?php echo getErrMsg('email'); ?></div>
 

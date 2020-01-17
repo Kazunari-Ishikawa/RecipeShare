@@ -228,9 +228,15 @@ function getUser($user_id) {
 //================================
 // フォーム入力保持
 function getFormData($key) {
+  global $dbUserData;
+  // DBにデータがある場合、それを返す
+  if (!empty($dbUserData[$key])) {
+    return $dbUserData[$key];
+  }
   if (!empty($_POST[$key])) {
     return $_POST[$key];
-  }else {
+  }
+  if (empty($_POST[$key])) {
     return null;
   }
 }
