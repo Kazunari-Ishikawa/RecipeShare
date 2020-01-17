@@ -37,6 +37,7 @@ if (!empty($_POST)) {
 
   // 変数定義
   $category = $_POST['category_id'];
+  $date = $_POST['date'];
   $mainName = $_POST['main-name'];
   $subName = $_POST['sub-name'];
   $comment = $_POST['comment'];
@@ -50,6 +51,9 @@ if (!empty($_POST)) {
   if ($edit_flg == 0) {
     // カテゴリ
     validSelect($category, 'category_id');
+    // 日付
+    validMaxLen($date, 'mate');
+    validRequired($date, 'date');
     // 主菜
     validMaxLen($mainName, 'main-name');
     validRequired($mainName, 'main-name');
@@ -63,6 +67,10 @@ if (!empty($_POST)) {
     // カテゴリ
     if ($category != $dbProductData['category_id']) {
       validSelect($category, 'category_id');
+    }
+    if ($date !== $dbProductData['date']) {
+      validMaxLen($date, 'mate');
+      validRequired($date, 'date');
     }
     // 主菜
     if ($mainName !== $dbProductData['main_name']) {
@@ -91,9 +99,10 @@ if (!empty($_POST)) {
       if ($edit_flg == 0) {
         debug('DBへ登録します');
         // SQL作成
-        $sql = 'INSERT INTO Recipe(category_id,main_name,sub_name,comment,pic,user_id,created_at) VALUES (:c_id,:main_name,:sub_name,:comment,:pic,:u_id,:created_at)';
+        $sql = 'INSERT INTO Recipe(category_id,date,main_name,sub_name,comment,pic,user_id,created_at) VALUES (:c_id,:date,:main_name,:sub_name,:comment,:pic,:u_id,:created_at)';
         $data = array(
           ':c_id' => $category,
+          ':date' => $date,
           ':main_name' => $mainName,
           ':sub_name' => $subName,
           ':comment' => $comment,
@@ -108,6 +117,7 @@ if (!empty($_POST)) {
         $sql = 'UPDATE Recipe SET category_id = :c_id, main_name = :main_name, sub_name = :sub_name, comment = :comment, pic = :pic WHERE id = :p_id AND user_id = :u_id';
         $data = array(
           ':c_id' => $category,
+          ':date' => $date,
           ':main_name' => $mainName,
           ':sub_name' => $subName,
           ':comment' => $comment,
@@ -180,6 +190,11 @@ require('head.php');
               </select>
             </label>
             <div class="msg-area"><?php echo getErrMsg('category_id'); ?></div>
+            <label>
+              <p>作った日</p><span>　記入例：2020年1月1日</span>
+              <input type="text" name="date" value="<?php echo getFormData('date'); ?>" />
+            </label>
+            <div class="msg-area"><?php echo getErrMsg('date'); ?></div>
             <label>
               <p>主菜</p>
               <input type="text" name="main-name" value="<?php echo getFormData('main_name'); ?>" />
