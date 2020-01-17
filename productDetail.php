@@ -29,7 +29,7 @@ require('head.php');
       <section id="detail">
         <div class="detail-container">
           <div class="detail-container-top">
-            <a href="mypage.html">前ページへ戻る</a>
+            <a href="mypage.php">前ページへ戻る</a>
           </div>
           <div class="detail-container-left">
             <img src="sample/IMG_20200115_200337.jpg" alt="" />
