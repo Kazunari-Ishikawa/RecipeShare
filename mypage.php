@@ -10,38 +10,24 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
-// プロダクト全取得関数
-function getMyProduct($user_id) {
-  debug('全プロダクトを取得します');
-  debug('ユーザーID：'.print_r($user_id, true));
+//================================
+// 画面表示用データ取得
+//================================
+// GETパラメータ取得
+debug('GET：'.print_r($_GET,true));
+// カテゴリ
+$c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+// カレントページ
+$currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
 
-  try {
-    // DB接続
-    $dbh = dbConnect();
-    // SQL作成
-    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
-    $data = array(':u_id' => $user_id);
-    // クエリ実行
-    $stmt = queryPost($dbh, $sql, $data);
-    // データ取得
-    $result = $stmt->fetchAll();
+// 1ページあたりの表示件数
+$listNum = 6;
+// 現在ページに表示する先頭レコードを算出
+$currentMinNum = $listNum * ($currentPageNum-1);
+// DBから一覧データを取得
+$viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
 
-    if ($stmt) {
-      return $result;
-    } else {
-      return false;
-    }
-
-  } catch(Exception $e) {
-    debug('エラー：'.$e->getMessage());
-    $err_msg['common'] = MSG08;
-  }
-}
-
-// 自分のプロダクトを取得
-$user_id = $_SESSION['user_id'];
-$viewData = getMyProduct($user_id);
-
+// カテゴリデータ取得
 $dbCategoryData = getCategory();
 
 ?>
@@ -64,9 +50,9 @@ require('head.php');
       <!-- サイドバー -->
       <section id="side-bar" class="layout-2-column-left">
         <div class="search-bar">
-          <form action="" method="post">
+          <form action="" method="get">
             <p>カテゴリ</p>
-            <select name="category">
+            <select name="c_id">
               <option value="0">選択してください</option>
               <?php
                 foreach ($dbCategoryData as $key => $val) {

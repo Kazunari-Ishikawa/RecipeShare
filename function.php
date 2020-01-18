@@ -284,6 +284,38 @@ function getProductAndCategory($product_id) {
     $err_msg['common'] = MSG08;
   }
 }
+// プロダクト一覧表示関数
+function getProductList($user_id, $currentMinNum, $listNum, $c_id = 0) {
+  debug('プロダクト一覧を取得します');
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    if ($c_id == 0) {
+      debug('全データを取得します');
+      $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
+      $data = array(':u_id' => $user_id);
+    } else {
+      debug('データを検索します');
+      $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND category_id = :c_id AND delete_flg = 0';
+      $data = array(':u_id' => $user_id, ':c_id' => $c_id);
+    }
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result = $stmt->fetchAll();
+    if ($stmt) {
+      return $result;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
 // カテゴリデータ取得関数
 function getCategory() {
   debug('カテゴリデータを取得します');
