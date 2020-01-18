@@ -102,6 +102,16 @@ require('head.php');
           </div>
         </div>
       </section>
+
+      <!-- ページング -->
+      <div class="paging">
+        <ul>
+          <li class="page-list"><a href="">1</a></li>
+          <li class="page-list"><a href="">2</a></li>
+          <li class="page-list"><a href="">3</a></li>
+        </ul>
+      </div>
+
     </main>
 
     <!-- フッター -->
