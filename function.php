@@ -285,55 +285,49 @@ function getProductAndCategory($product_id) {
   }
 }
 // プロダクト一覧表示関数
-function getProductList($user_id, $currentMinNum, $listNum, $c_id = 0) {
-  debug('プロダクト一覧を取得します');
+function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
+  debug('リストを取得します');
 
   try {
     // DB接続
     $dbh = dbConnect();
     // SQL作成
-    if ($c_id == 0) {
-      debug('全データを取得します');
-      $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
-      $data = array(':u_id' => $user_id);
-    } else {
-      debug('データを検索します');
-      $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND category_id = :c_id AND delete_flg = 0';
-      $data = array(':u_id' => $user_id, ':c_id' => $c_id);
+    debug('該当レコードを検索します');
+    $sql = 'SELECT id FROM Recipe WHERE user_id = :u_id';
+    if (!empty($c_id)) {
+      $sql .= ' AND category_id = '.$c_id;
     }
-    // クエリ実行
-    $stmt = queryPost($dbh, $sql, $data);
-    // データ取得
-    $result = $stmt->fetchAll();
-    if ($stmt) {
-      return $result;
-    } else {
-      return false;
-    }
-
-  } catch(Exception $e) {
-    debug('エラー：'.$e->getMessage());
-    $err_msg['common'] = MSG08;
-  }
-}
-// プロダクト全件数計算関数
-function getTotalProductNum($user_id) {
-  debug('プロダクト件数を取得します');
-  debug('ユーザーID：'.print_r($user_id, true));
-
-  try {
-    // DB接続
-    $dbh = dbConnect();
-    // SQL作成
-    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
     $data = array(':u_id' => $user_id);
     // クエリ実行
     $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result['total'] = $stmt->rowCount();
+    if (!$stmt) {
+      return false;
+    }
 
-    $count = $stmt->rowCount();
+    debug('レコード一覧を取得します');
+    // SQL作成
+    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id';
+    if (!empty($c_id)) {
+      $sql .= ' AND category_id = '.$c_id;
+    }
+    $sql .= ' LIMIT :list OFFSET :offset';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':u_id', $user_id);
+    $stmt->bindValue(':list', $listNum, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $currentMinNum, PDO::PARAM_INT);
+    // クエリ実行
+    $stmt->execute();
+
     if ($stmt) {
-      return $count;
+      debug('クエリ成功');
+      // データ取得
+      $result['data'] = $stmt->fetchAll();
+      return $result;
     } else {
+      debug('クエリ失敗');
+      debug('失敗したSQL：'.print_r($stmt,true));
       return false;
     }
 
@@ -342,6 +336,7 @@ function getTotalProductNum($user_id) {
     $err_msg['common'] = MSG08;
   }
 }
+
 // カテゴリデータ取得関数
 function getCategory() {
   debug('カテゴリデータを取得します');
@@ -458,7 +453,7 @@ function pagination($listNum, $currentPageNum, $totalCount, $c_id, $pageColNum =
   // 総ページ数が3以下の場合、全て表示
   if ($totalPageNum <= $pageColNum) {
     $minPageNum = 1;
-    $maxPageNum = $currentPageNum;
+    $maxPageNum = $totalPageNum;
     // 総ページ数が3より大きく、現在ページが1~2の場合
   } elseif ($totalPageNum >= $pageColNum && $currentPageNum <= 2) {
     $minPageNum = 1;

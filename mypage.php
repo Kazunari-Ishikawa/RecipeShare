@@ -21,17 +21,17 @@ $c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
 
 // 1ページあたりの表示件数
-$listNum = 3;
+$listNum = 6;
 // 現在ページに表示する先頭レコードを算出
 $currentMinNum = $listNum * ($currentPageNum-1);
 // DBから一覧データを取得
 $viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
+debug('取得したデータ：'.print_r($viewData,true));
 
 // カテゴリデータ取得
 $dbCategoryData = getCategory();
 
-// 全件数を取得
-$totalCount = getTotalProductNum($_SESSION['user_id']);
+debug('<<<<<画面表示処理終了<<<<<');
 
 ?>
 
@@ -77,8 +77,8 @@ require('head.php');
         <div class="contents-container">
           <div class="card-container">
             <?php
-              if (!empty($viewData)) {
-                foreach ($viewData as $key => $val) {
+              if (!empty($viewData['data'])) {
+                foreach ($viewData['data'] as $key => $val) {
             ?>
                 <div class="card">
                   <a href="productDetail.php?p_id=<?php echo $val['id']; ?>">
@@ -107,7 +107,7 @@ require('head.php');
       </section>
 
       <!-- ページング -->
-      <?php pagination($listNum, $currentPageNum, $totalCount, $c_id); ?>
+      <?php pagination($listNum, $currentPageNum, $viewData['total'], $c_id); ?>
 
     </main>
 
