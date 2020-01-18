@@ -316,6 +316,32 @@ function getProductList($user_id, $currentMinNum, $listNum, $c_id = 0) {
     $err_msg['common'] = MSG08;
   }
 }
+// プロダクト全件数計算関数
+function getTotalProductNum($user_id) {
+  debug('プロダクト件数を取得します');
+  debug('ユーザーID：'.print_r($user_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
+    $data = array(':u_id' => $user_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+
+    $count = $stmt->rowCount();
+    if ($stmt) {
+      return $count;
+    } else {
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
 // カテゴリデータ取得関数
 function getCategory() {
   debug('カテゴリデータを取得します');
@@ -417,4 +443,59 @@ function uploadImg($file, $key) {
 
     }
   }
+}
+
+// ページング機能
+function pagination($listNum, $currentPageNum, $totalCount, $c_id, $pageColNum = 3) {
+
+  // 総ページ数計算
+  $totalPageNum = ceil($totalCount/$listNum);
+  // 最小表示ページと最大表示ページを求めて、その分だけforでliを作る
+  $minPageNum = 0;
+  $maxPageNum = 0;
+
+  // 場合分けは総ページ数で分ける
+  // 総ページ数が3以下の場合、全て表示
+  if ($totalPageNum <= $pageColNum) {
+    $minPageNum = 1;
+    $maxPageNum = $currentPageNum;
+    // 総ページ数が3より大きく、現在ページが1~2の場合
+  } elseif ($totalPageNum >= $pageColNum && $currentPageNum <= 2) {
+    $minPageNum = 1;
+    $maxPageNum = 3;
+    // 総ページ数が3より大きく、現在ページが総ページ数-1,0の場合
+  } elseif ($totalPageNum >= $pageColNum && $currentPageNum >= $totalPageNum - 1) {
+    $minPageNum = $totalPageNum - ($pageColNum - 1);
+    $maxPageNum = $totalPageNum;
+    // それ以外
+  } else {
+    $minPageNum = $currentPageNum - 1;
+    $maxPageNum = $currentPageNum + 1;
+  }
+
+  // ページリンク用
+  $link = '';
+  if (!empty($c_id)) {
+    $link .= '&c_id='.$c_id;
+  }
+
+  // 表示用HTML
+  echo '<div class="paging">';
+    echo '<ul>';
+      if ($currentPageNum != 1) {
+        echo '<li class="page-list"><a href="?p=1'.$link.'">&lt;</a></li>';
+      }
+      for ($i = $minPageNum; $i <= $maxPageNum; $i++) {
+        echo '<li class="page-list ';
+        if ($currentPageNum == $i) {
+          echo 'active';
+        }
+        echo '"><a href="?p='.$i.$link.'">'.$i.'</a></li>';
+      }
+      if ($currentPageNum != $totalPageNum) {
+        echo '<li class="page-list"><a href="?p='.$totalPageNum.$link.'">&gt;</a></li>';
+      }
+    echo '</ul>';
+  echo '</div>';
+
 }

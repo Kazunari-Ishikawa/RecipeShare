@@ -21,7 +21,7 @@ $c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
 
 // 1ページあたりの表示件数
-$listNum = 6;
+$listNum = 3;
 // 現在ページに表示する先頭レコードを算出
 $currentMinNum = $listNum * ($currentPageNum-1);
 // DBから一覧データを取得
@@ -29,6 +29,9 @@ $viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id)
 
 // カテゴリデータ取得
 $dbCategoryData = getCategory();
+
+// 全件数を取得
+$totalCount = getTotalProductNum($_SESSION['user_id']);
 
 ?>
 
@@ -104,13 +107,7 @@ require('head.php');
       </section>
 
       <!-- ページング -->
-      <div class="paging">
-        <ul>
-          <li class="page-list"><a href="">1</a></li>
-          <li class="page-list"><a href="">2</a></li>
-          <li class="page-list"><a href="">3</a></li>
-        </ul>
-      </div>
+      <?php pagination($listNum, $currentPageNum, $totalCount, $c_id); ?>
 
     </main>
 

@@ -345,7 +345,7 @@ footer p {
 }
 .page-list {
   position: relative;
-  left: 45%;
+  left: 50%;
   float: left;
   display: block;
   margin-right: 5px;
@@ -361,6 +361,10 @@ footer p {
 }
 .page-list a:hover {
   background: #bbb;
+}
+.active a {
+  background: #555;
+  color: white;
 }
 
 /* ================================
