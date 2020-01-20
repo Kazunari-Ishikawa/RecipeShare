@@ -25,7 +25,7 @@ $listNum = 6;
 // 現在ページに表示する先頭レコードを算出
 $currentMinNum = $listNum * ($currentPageNum-1);
 // DBから一覧データを取得
-$viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
+$viewData = getFavoriteList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
 debug('取得したデータ：'.print_r($viewData,true));
 
 // カテゴリデータ取得

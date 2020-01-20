@@ -389,8 +389,46 @@ function isFavorite($user_id, $product_id) {
     debug('エラー：'.$e->getMessage());
     $err_msg['common'] = MSG08;
   }
-
 }
+
+// お気に入りリスト取得関数
+function getFavoriteList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
+  debug('お気に入りリストを取得します');
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT r.id, r.category_id, r.date, r.main_name, r.sub_name, r.comment, r.pic FROM favorite AS f LEFT JOIN Recipe AS r ON f.product_id = r.id WHERE f.user_id = :u_id';
+    if (!empty($c_id)) {
+      $sql .= ' AND category_id = '.$c_id;
+    }
+    $sql .= ' LIMIT :list OFFSET :offset';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':u_id', $user_id);
+    $stmt->bindValue(':list', $listNum, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $currentMinNum, PDO::PARAM_INT);
+    // クエリ実行
+    $stmt->execute();
+
+    if ($stmt) {
+      debug('クエリ成功');
+      // データ取得
+      $result['total'] = $stmt->rowCount();
+      $result['data'] = $stmt->fetchAll();
+      return $result;
+    } else {
+      debug('クエリ失敗');
+      debug('失敗したSQL：'.print_r($stmt,true));
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+
 
 //================================
 // その他
