@@ -10,6 +10,27 @@ debugLogStart();
 // ログイン認証
 require('auth.php');
 
+//================================
+// 画面表示用データ取得
+//================================
+// GETパラメータ取得
+debug('GET：'.print_r($_GET,true));
+// カテゴリ
+$c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+// カレントページ
+$currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
+
+// 1ページあたりの表示件数
+$listNum = 6;
+// 現在ページに表示する先頭レコードを算出
+$currentMinNum = $listNum * ($currentPageNum-1);
+// DBから一覧データを取得
+$viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
+debug('取得したデータ：'.print_r($viewData,true));
+
+// カテゴリデータ取得
+$dbCategoryData = getCategory();
+
 ?>
 
 <?php
@@ -17,25 +38,30 @@ $siteTitle = 'お気に入り一覧';
 require('head.php');
 ?>
 
-  <body>
+<body>
     <!-- ヘッダー -->
     <?php require('header.php'); ?>
 
     <!-- メイン -->
-    <main id="mypage" class="layout-2-column">
-      <h1 class="page-title"><?php echo $siteTitle; ?></>
+    <main id="favorite" class="layout-2-column">
+      <h1 class="page-title"><?php echo $siteTitle; ?></h1>
       <div class="regist-container">
-        <p><a href="registProduct.html">新しく料理を登録する</a></p>
       </div>
       <!-- サイドバー -->
       <section id="side-bar" class="layout-2-column-left">
         <div class="search-bar">
-          <form action="" method="post">
+          <form action="" method="get">
             <p>カテゴリ</p>
-            <select name="category" id="">
+            <select name="c_id">
               <option value="0">選択してください</option>
+              <?php
+                foreach ($dbCategoryData as $key => $val) {
+              ?>
+                  <option value="<?php echo $val['id']; ?>" <?php if (getFormData('category_id') == $val['id']) echo 'selected'; ?>><?php echo $val['name']; ?></option>
+              <?php
+                }
+              ?>
             </select>
-            <p>日付</p>
             <div class="btn-container">
               <input type="submit" value="検索" class="btn btn-center" />
             </div>
@@ -47,37 +73,39 @@ require('head.php');
       <section id="contents" class="layout-2-column-right">
         <div class="contents-container">
           <div class="card-container">
-            <div class="card">
-              <a href="productDetail.html">
-                <img src="sample/IMG_20200102_194326.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.html">
-                <img src="sample/IMG_20200103_193716.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.html">
-                <img src="sample/IMG_20200104_183435.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
-            <div class="card">
-              <a href="productDetail.html">
-                <img src="sample/IMG_20200105_185529.jpg" alt="" />
-                <p>日付</p>
-                <p>タイトル</p>
-              </a>
-            </div>
+            <?php
+              if (!empty($viewData['data'])) {
+                foreach ($viewData['data'] as $key => $val) {
+            ?>
+                <div class="card">
+                  <a href="productDetail.php?p_id=<?php echo $val['id']; ?>">
+                    <img src="<?php echo $val['pic']; ?>" alt="" />
+                    <p><?php echo $val['date'] ?></p>
+                    <p><?php echo $val['main_name']; ?></p>
+                  </a>
+                </div>
+            <?php
+                }
+              } else {
+            ?>
+                <div class="card">
+                  <a href="">
+                    <img src="" alt="" />
+                    <p></p>
+                    <p></p>
+                  </a>
+                </div>
+            <?php
+              }
+            ?>
+
           </div>
         </div>
       </section>
+
+      <!-- ページング -->
+      <?php pagination($listNum, $currentPageNum, $viewData['total'], $c_id); ?>
+
     </main>
 
     <!-- フッター -->

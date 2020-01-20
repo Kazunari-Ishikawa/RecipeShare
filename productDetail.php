@@ -50,6 +50,7 @@ require('head.php');
             <img src="<?php echo $viewData['pic']; ?>" alt="" />
           </div>
           <div class="detail-container-right">
+            <i" class="fa fa-heart js-click-favorite <?php if(isFavorite($_SESSION['user_id'], $viewData['id'])) echo 'active'; ?>" aria-hidden="true" data-productid="<?php echo $viewData['id']; ?>"></i">
             <p><?php echo $viewData['category']; ?></p>
             <p>日付：</p>
             <p>主菜：<?php echo $viewData['main_name']; ?></p>

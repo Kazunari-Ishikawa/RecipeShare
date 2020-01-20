@@ -267,7 +267,7 @@ function getProductAndCategory($product_id) {
     // DB接続
     $dbh = dbConnect();
     // SQL作成
-    $sql = 'SELECT c.name AS category, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
+    $sql = 'SELECT r.id, c.name AS category, r.main_name, r.sub_name, r.comment, r.pic, r.user_id FROM Recipe AS r LEFT JOIN category AS c ON r.category_id = c.id WHERE r.id = :p_id AND r.delete_flg = 0 AND c.delete_flg = 0';
     $data = array(':p_id' => $product_id);
     // クエリ実行
     $stmt = queryPost($dbh, $sql, $data);
@@ -362,6 +362,34 @@ function getCategory() {
     debug('エラー：'.$e->getMessage());
     $err_msg['common'] = MSG08;
   }
+}
+// お気に入り判定関数
+function isFavorite($user_id, $product_id) {
+  debug('お気に入り情報を確認します');
+  debug('ユーザーID：'.print_r($user_id, true));
+  debug('プロダクトID：'.print_r($product_id, true));
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    $sql = 'SELECT * FROM favorite WHERE user_id = :u_id AND product_id = :p_id';
+    $data = array(':p_id' => $product_id, ':u_id' => $user_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    if ($stmt->rowCount()) {
+      debug('お気に入りです');
+      return true;
+    } else {
+      debug('お気に入りではありません');
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+
 }
 
 //================================
