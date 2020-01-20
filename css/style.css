@@ -262,6 +262,11 @@ input[type="checkbox"] {
 /* ================================
 トップコンテンツ
 ================================ */
+.fadeInUp {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: 1.5s;
+}
 #DESCRIPTION h2 {
   display: inline-block;
   text-align: center;

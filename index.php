@@ -23,7 +23,7 @@ require('head.php');
     <section id="ABOUT">
       <div class="top-img">
         <img src="img/top-pic4M.jpg" alt="" />
-        <div class="top-img-container">
+        <div class="top-img-container fadeInUp">
           <h1>わたしのご飯</h1>
           <p>
             作ったご飯を登録しておくことで<br />今日のレシピに迷ったときにさっと検索できます
@@ -37,7 +37,7 @@ require('head.php');
 
     <!-- コンテンツ -->
     <div class="container">
-      <section id="DESCRIPTION">
+      <section id="DESCRIPTION" class="fadeInUp">
         <h2>できること</h2>
         <div class="panel-container">
           <div class="panel description">
