@@ -413,6 +413,9 @@ footer p {
 /* ================================
 詳細画面
 ================================ */
+#productDetail > a {
+  text-decoration: none;
+}
 .detail-container {
   width: 100%;
   overflow: hidden;
@@ -424,20 +427,40 @@ footer p {
   float: left;
   width: 60%;
 }
+.detail-container-left img {
+  width: 100%;
+  border-radius: 20px;
+}
 .detail-container-right {
   width: 30%;
   float: left;
   margin-left: 20px;
 }
-.detail-container img {
-  width: 100%;
+.icon-container {
+  margin-bottom: 20px;
+  overflow: hidden;
 }
-.icon-favorite {
+.detail-icon {
+  color: #333;
+  font-size: 2em;
+  margin-right: 10px;
   cursor: pointer;
 }
-.icon-favorite.active {
+.active {
   color: #fe8a8b;
 }
+.google-search {
+  margin-bottom: 10px;
+}
+.google-search a {
+  display: inline-block;
+}
+#detail-table {
+  font-family: "Kosugi Maru", sans-serif;
+  color: #555;
+  width: 100%;
+}
+
 /* ================================
 登録編集画面
 ================================ */

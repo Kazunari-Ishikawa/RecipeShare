@@ -32,40 +32,73 @@ $siteTitle = '料理詳細';
 require('head.php');
 ?>
 
-  <body>
-    <!-- ヘッダー -->
-    <?php require('header.php'); ?>
+<body>
+  <!-- ヘッダー -->
+  <?php require('header.php'); ?>
 
-    <!-- メイン -->
-    <main id="mypage" class="layout-1-column">
-      <h1 class="page-title">わたしのご飯</h1>
+  <!-- メイン -->
+  <main id="productDetail" class="layout-1-column">
+    <a href="ProductDetail.php?p_id=<?php echo sanitize($viewData['id']); ?>">
+      <h1 class="page-title"><?php echo sanitize($viewData['main_name']); ?></h1>
+    </a>
 
-      <!-- メインコンテンツ -->
-      <section id="detail">
-        <div class="detail-container">
-          <div class="detail-container-top">
-            <a href="mypage.php">前ページへ戻る</a>
-          </div>
-          <div class="detail-container-left">
-            <img src="<?php echo $viewData['pic']; ?>" alt="" />
-          </div>
-          <div class="detail-container-right">
-            <i" class="fa fa-heart icon-favorite js-click-favorite <?php if(isFavorite($_SESSION['user_id'], $viewData['id'])) echo 'active'; ?>" aria-hidden="true" data-productid="<?php echo $viewData['id']; ?>"></i">
-            <p><?php echo $viewData['category']; ?></p>
-            <p>日付：</p>
-            <p>主菜：<?php echo $viewData['main_name']; ?></p>
-            <div class="btn-container">
-              <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['main_name']; ?>+レシピ">レシピをGoogle検索！</a>
-            </div>
-            <p>副菜：<?php echo $viewData['sub_name']; ?></p>
-            <div class="btn-container">
-            <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['sub_name']; ?>+レシピ">レシピをGoogle検索！</a>
-            </div>
-            <p><?php echo $viewData['comment']; ?></p>
-          </div>
+    <!-- メインコンテンツ -->
+    <section id="detail">
+      <div class="detail-container">
+        <div class="detail-container-top">
+          <a href="mypage.php">前ページへ戻る</a>
         </div>
-      </section>
-    </main>
+        <div class="detail-container-left">
+          <img src="<?php echo sanitize($viewData['pic']); ?>" alt="" />
+        </div>
+        <div class="detail-container-right">
+          <div class="icon-container">
+            <i
+              class="fa fa-heart detail-icon js-click-favorite <?php if(isFavorite($_SESSION['user_id'], $viewData['id'])) echo 'active'; ?>"
+              aria-hidden="true"
+              data-productid="<?php echo $viewData['id']; ?>"
+            ></i>
+            <a href="registProduct.php?p_id=<?php echo $product_id; ?>"
+              ><i class="fas fa-edit detail-icon"></i
+            ></a>
+            <a href="<?php echo $product_id; ?>"
+              ><i class="far fa-trash-alt detail-icon"></i
+            ></a>
+          </div>
 
-    <!-- フッター -->
-    <?php require('footer.php'); ?>
+          <div class="google-search">
+            <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['main_name']; ?>+レシピ"><?php echo sanitize($viewData['main_name']); ?>のレシピを検索！</a>
+            <a href="https://www.google.com/search?hl=ja&q=<?php echo $viewData['sub_name']; ?>+レシピ"><?php echo sanitize($viewData['sub_name']); ?>のレシピを検索！</a>
+          </div>
+
+          <table id="detail-table">
+            <tr>
+              <td>カテゴリ</td>
+              <td>：<?php echo sanitize($viewData['category']); ?></td>
+            </tr>
+            <tr>
+              <td>日付</td>
+              <td>：<?php echo sanitize($viewData['date']); ?></td>
+            </tr>
+            <tr>
+              <td>主菜</td>
+              <td>：<?php echo sanitize($viewData['main_name']); ?></td>
+            </tr>
+            <tr>
+              <td>副菜</td>
+              <td>：<?php echo sanitize($viewData['sub_name']); ?></td>
+            </tr>
+            <tr>
+              <td>コメント</td>
+              <td>：<?php echo sanitize($viewData['comment']); ?></td>
+            </tr>
+          </table>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- フッター -->
+  <?php require('footer.php'); ?>
+</body>
