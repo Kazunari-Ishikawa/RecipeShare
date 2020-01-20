@@ -207,7 +207,7 @@ require('head.php');
             <div class="msg-area"><?php echo getErrMsg('sub-name'); ?></div>
             <label>
               <p>コメント</p>
-              <input type="text" name="comment" value="<?php echo getFormData('comment'); ?>" />
+              <textarea name="comment" cols="30" rows="10" style="height:150px;"><?php echo getFormData('comment'); ?></textarea>
             </label>
             <div class="msg-area"><?php echo getErrMsg('comment'); ?></div>
             <label>

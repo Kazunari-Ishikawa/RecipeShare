@@ -286,7 +286,7 @@ function getProductAndCategory($product_id) {
   }
 }
 // プロダクト一覧表示関数
-function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
+function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0, $m_date = 0) {
   debug('リストを取得します');
 
   try {
@@ -294,7 +294,7 @@ function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
     $dbh = dbConnect();
     // SQL作成
     debug('該当レコードを検索します');
-    $sql = 'SELECT id FROM Recipe WHERE user_id = :u_id';
+    $sql = 'SELECT id FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
     if (!empty($c_id)) {
       $sql .= ' AND category_id = '.$c_id;
     }
@@ -309,9 +309,19 @@ function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
 
     debug('レコード一覧を取得します');
     // SQL作成
-    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id';
+    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id AND delete_flg = 0';
     if (!empty($c_id)) {
       $sql .= ' AND category_id = '.$c_id;
+    }
+    if ($m_date != 0) {
+      switch ($m_date) {
+        case 1:
+          $sql .= ' ORDER BY date ASC';
+          break;
+        case 2:
+          $sql .= ' ORDER BY date DESC';
+          break;
+      }
     }
     $sql .= ' LIMIT :list OFFSET :offset';
     $stmt = $dbh->prepare($sql);
@@ -373,6 +383,10 @@ function getErrMsg($key){
   if (!empty($err_msg[$key])) {
     return $err_msg[$key];
   }
+}
+// サニタイズ
+function sanitize($str) {
+  return htmlspecialchars($str,ENT_QUOTES);
 }
 // フォーム入力保持
 function getFormData($key) {

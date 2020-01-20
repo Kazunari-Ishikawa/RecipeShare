@@ -17,6 +17,8 @@ require('auth.php');
 debug('GET：'.print_r($_GET,true));
 // カテゴリ
 $c_id = (!empty($_GET['c_id'])) ? $_GET['c_id'] : '';
+// 日付
+$m_date = (!empty($_GET['m_date'])) ? $_GET['m_date'] : '';
 // カレントページ
 $currentPageNum = (!empty($_GET['p'])) ? $_GET['p'] : 1;
 
@@ -25,7 +27,7 @@ $listNum = 6;
 // 現在ページに表示する先頭レコードを算出
 $currentMinNum = $listNum * ($currentPageNum-1);
 // DBから一覧データを取得
-$viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id);
+$viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id, $m_date);
 debug('取得したデータ：'.print_r($viewData,true));
 
 // カテゴリデータ取得
@@ -65,8 +67,14 @@ require('head.php');
                 }
               ?>
             </select>
+            <p>作った日</p>
+            <select name="m_date">
+              <option value="0">選択してください</option>
+              <option value="1">古い順</option>
+              <option value="2">新しい順</option>
+            </select>
             <div class="btn-container">
-              <input type="submit" value="検索" class="btn btn-center" />
+              <input type="submit" value="検索" class="btn btn-left" />
             </div>
           </form>
         </div>
@@ -81,10 +89,10 @@ require('head.php');
                 foreach ($viewData['data'] as $key => $val) {
             ?>
                 <div class="card">
-                  <a href="productDetail.php?p_id=<?php echo $val['id']; ?>">
-                    <img src="<?php echo $val['pic']; ?>" alt="" />
-                    <p><?php echo $val['date'] ?></p>
-                    <p><?php echo $val['main_name']; ?></p>
+                  <a href="productDetail.php?p_id=<?php echo sanitize($val['id']); ?>">
+                    <img src="<?php echo sanitize($val['pic']); ?>" alt="" />
+                    <p><?php echo sanitize($val['date']); ?></p>
+                    <p><?php echo sanitize($val['main_name']); ?></p>
                   </a>
                 </div>
             <?php
