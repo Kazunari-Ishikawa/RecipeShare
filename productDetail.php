@@ -53,17 +53,14 @@ require('head.php');
         </div>
         <div class="detail-container-right">
           <div class="icon-container">
-            <i
-              class="fa fa-heart detail-icon js-click-favorite <?php if(isFavorite($_SESSION['user_id'], $viewData['id'])) echo 'active'; ?>"
-              aria-hidden="true"
-              data-productid="<?php echo $viewData['id']; ?>"
-            ></i>
-            <a href="registProduct.php?p_id=<?php echo $product_id; ?>"
-              ><i class="fas fa-edit detail-icon"></i
-            ></a>
-            <a href="<?php echo $product_id; ?>"
-              ><i class="far fa-trash-alt detail-icon"></i
-            ></a>
+            <i class="fa fa-heart detail-icon js-click-favorite <?php if(isFavorite($_SESSION['user_id'], $viewData['id'])) echo 'active'; ?>" aria-hidden="true" data-productid="<?php echo $viewData['id']; ?>"></i>
+            <a href="registProduct.php?p_id=<?php echo $product_id; ?>">
+              <i class="fas fa-edit detail-icon"></i>
+            </a>
+            <i class="far fa-trash-alt detail-icon js-click-delete" data-productid=<?php echo $_GET['p_id']; ?>></i>
+            <!-- <a href="productDelete.php?p_id=<?php echo $product_id; ?>">
+              <i class="far fa-trash-alt detail-icon js-click-delete" data-productid=<?php echo $_GET['p_id']; ?>></i>
+            </a> -->
           </div>
 
           <div class="google-search">

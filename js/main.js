@@ -42,4 +42,34 @@ $(function() {
         });
     });
   }
+  // 料理削除
+  var $delete = $(".js-click-delete") || null;
+  deleteProductId = $delete.data("productid") || null;
+
+  if (deleteProductId !== undefined && deleteProductId !== null) {
+    $delete.on("click", function() {
+      var $this = $(this);
+      var deleteFlg = confirm("本当に削除しますか？");
+      if (deleteFlg) {
+        console.log("削除します");
+        $.ajax({
+          url: "ajaxDelete.php",
+          type: "POST",
+          data: {
+            productId: deleteProductId
+          }
+        })
+          .done(function(data) {
+            console.log("Ajax Success");
+            // window.location.herf = "mypage.php";
+            location.reload();
+          })
+          .fail(function() {
+            console.log("Ajax Error");
+          });
+      } else {
+        console.log("削除しません");
+      }
+    });
+  }
 });

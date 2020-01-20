@@ -440,6 +440,10 @@ footer p {
   margin-bottom: 20px;
   overflow: hidden;
 }
+.icon-container > a {
+  text-decoration: none;
+  display: inline-block;
+}
 .detail-icon {
   color: #333;
   font-size: 2em;
