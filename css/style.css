@@ -347,6 +347,41 @@ footer p {
 }
 
 /* ================================
+ページング
+================================ */
+.paging {
+  height: 40px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.paging ul {
+  margin: 0;
+}
+.page-list {
+  position: relative;
+  left: 50%;
+  float: left;
+  display: block;
+  margin-right: 5px;
+}
+.page-list:last-child {
+  margin-right: 0;
+}
+.page-list a {
+  display: block;
+  padding: 5px 10px;
+  background: #eee;
+  text-decoration: none;
+}
+.page-list a:hover {
+  background: #bbb;
+}
+.active a {
+  background: #555;
+  color: white;
+}
+
+/* ================================
 個人設定
 ================================ */
 .side-nav {

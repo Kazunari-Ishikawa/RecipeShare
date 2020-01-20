@@ -285,6 +285,59 @@ function getProductAndCategory($product_id) {
     $err_msg['common'] = MSG08;
   }
 }
+// プロダクト一覧表示関数
+function getProductList($user_id, $currentMinNum = 1, $listNum, $c_id = 0) {
+  debug('リストを取得します');
+
+  try {
+    // DB接続
+    $dbh = dbConnect();
+    // SQL作成
+    debug('該当レコードを検索します');
+    $sql = 'SELECT id FROM Recipe WHERE user_id = :u_id';
+    if (!empty($c_id)) {
+      $sql .= ' AND category_id = '.$c_id;
+    }
+    $data = array(':u_id' => $user_id);
+    // クエリ実行
+    $stmt = queryPost($dbh, $sql, $data);
+    // データ取得
+    $result['total'] = $stmt->rowCount();
+    if (!$stmt) {
+      return false;
+    }
+
+    debug('レコード一覧を取得します');
+    // SQL作成
+    $sql = 'SELECT * FROM Recipe WHERE user_id = :u_id';
+    if (!empty($c_id)) {
+      $sql .= ' AND category_id = '.$c_id;
+    }
+    $sql .= ' LIMIT :list OFFSET :offset';
+    $stmt = $dbh->prepare($sql);
+    $stmt->bindValue(':u_id', $user_id);
+    $stmt->bindValue(':list', $listNum, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $currentMinNum, PDO::PARAM_INT);
+    // クエリ実行
+    $stmt->execute();
+
+    if ($stmt) {
+      debug('クエリ成功');
+      // データ取得
+      $result['data'] = $stmt->fetchAll();
+      return $result;
+    } else {
+      debug('クエリ失敗');
+      debug('失敗したSQL：'.print_r($stmt,true));
+      return false;
+    }
+
+  } catch(Exception $e) {
+    debug('エラー：'.$e->getMessage());
+    $err_msg['common'] = MSG08;
+  }
+}
+
 // カテゴリデータ取得関数
 function getCategory() {
   debug('カテゴリデータを取得します');
@@ -386,4 +439,59 @@ function uploadImg($file, $key) {
 
     }
   }
+}
+
+// ページング機能
+function pagination($listNum, $currentPageNum, $totalCount, $c_id, $pageColNum = 3) {
+
+  // 総ページ数計算
+  $totalPageNum = ceil($totalCount/$listNum);
+  // 最小表示ページと最大表示ページを求めて、その分だけforでliを作る
+  $minPageNum = 0;
+  $maxPageNum = 0;
+
+  // 場合分けは総ページ数で分ける
+  // 総ページ数が3以下の場合、全て表示
+  if ($totalPageNum <= $pageColNum) {
+    $minPageNum = 1;
+    $maxPageNum = $totalPageNum;
+    // 総ページ数が3より大きく、現在ページが1~2の場合
+  } elseif ($totalPageNum >= $pageColNum && $currentPageNum <= 2) {
+    $minPageNum = 1;
+    $maxPageNum = 3;
+    // 総ページ数が3より大きく、現在ページが総ページ数-1,0の場合
+  } elseif ($totalPageNum >= $pageColNum && $currentPageNum >= $totalPageNum - 1) {
+    $minPageNum = $totalPageNum - ($pageColNum - 1);
+    $maxPageNum = $totalPageNum;
+    // それ以外
+  } else {
+    $minPageNum = $currentPageNum - 1;
+    $maxPageNum = $currentPageNum + 1;
+  }
+
+  // ページリンク用
+  $link = '';
+  if (!empty($c_id)) {
+    $link .= '&c_id='.$c_id;
+  }
+
+  // 表示用HTML
+  echo '<div class="paging">';
+    echo '<ul>';
+      if ($currentPageNum != 1) {
+        echo '<li class="page-list"><a href="?p=1'.$link.'">&lt;</a></li>';
+      }
+      for ($i = $minPageNum; $i <= $maxPageNum; $i++) {
+        echo '<li class="page-list ';
+        if ($currentPageNum == $i) {
+          echo 'active';
+        }
+        echo '"><a href="?p='.$i.$link.'">'.$i.'</a></li>';
+      }
+      if ($currentPageNum != $totalPageNum) {
+        echo '<li class="page-list"><a href="?p='.$totalPageNum.$link.'">&gt;</a></li>';
+      }
+    echo '</ul>';
+  echo '</div>';
+
 }
