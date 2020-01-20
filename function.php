@@ -75,7 +75,7 @@ define('MSG14', 'カテゴリを選択して下さい');
 
 define('SUC01', 'プロフィールを更新しました');
 define('SUC02', 'パスワードを変更しました');
-define('SUC03', 'ご飯を登録しました');
+define('SUC03', '料理を登録しました');
 
 //================================
 // バリデーション関数
@@ -470,6 +470,14 @@ function getFormData($key) {
   }
   if (empty($_POST[$key])) {
     return null;
+  }
+}
+// 一度だけセッションを取得する
+function getSessionFlush($key) {
+  if (!empty($_SESSION[$key])) {
+    $data = $_SESSION[$key];
+    $_SESSION[$key] = '';
+    return $data;
   }
 }
 // 画像アップロード関数

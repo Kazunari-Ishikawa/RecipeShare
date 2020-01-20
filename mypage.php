@@ -46,6 +46,8 @@ require('head.php');
     <!-- ヘッダー -->
     <?php require('header.php'); ?>
 
+    <p id="js-show-msg" class="slide-msg"><?php echo getSessionFlush('suc_msg'); ?></p>
+
     <!-- メイン -->
     <main id="mypage" class="layout-2-column">
       <h1 class="page-title"><?php echo $siteTitle; ?></h1>

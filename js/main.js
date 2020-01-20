@@ -19,6 +19,15 @@ $(function() {
   $(window).scroll(function() {
     animation();
   });
+  // メッセージ表示
+  var $showMsg = $("#js-show-msg");
+  var msg = $showMsg.text();
+  if (msg.length) {
+    $showMsg.slideToggle("slow");
+    setTimeout(function() {
+      $showMsg.slideToggle("slow");
+    }, 3000);
+  }
   // お気に入り登録・解除
   // 変数定義
   var $favorite, favoriteProductId;

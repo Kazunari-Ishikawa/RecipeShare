@@ -342,7 +342,7 @@ footer p {
   float: left;
   margin: 10px;
   box-sizing: border-box;
-  transition: 0.5s;
+  transition: 0.3s;
 }
 .card a {
   display: block;
@@ -352,7 +352,17 @@ footer p {
   width: 100%;
 }
 .card:hover {
-  opacity: 0.7;
+  box-shadow: 0 0 10px gray;
+}
+.slide-msg {
+  position: relative;
+  top: 48px;
+  height: 40px;
+  line-height: 40px;
+  background-color: rgba(255, 193, 1, 0.9);
+  font-size: 18px;
+  text-align: center;
+  display: none;
 }
 
 /* ================================
