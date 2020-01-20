@@ -432,7 +432,12 @@ footer p {
 .detail-container img {
   width: 100%;
 }
-
+.icon-favorite {
+  cursor: pointer;
+}
+.icon-favorite.active {
+  color: #fe8a8b;
+}
 /* ================================
 登録編集画面
 ================================ */
