@@ -28,7 +28,7 @@ $listNum = 6;
 $currentMinNum = $listNum * ($currentPageNum-1);
 // DBから一覧データを取得
 $viewData = getProductList($_SESSION['user_id'], $currentMinNum,$listNum, $c_id, $m_date);
-debug('取得したデータ：'.print_r($viewData,true));
+// debug('取得したデータ：'.print_r($viewData,true));
 
 // カテゴリデータ取得
 $dbCategoryData = getCategory();

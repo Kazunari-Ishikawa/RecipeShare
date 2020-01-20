@@ -167,11 +167,13 @@ require('head.php');
 
     <!-- メイン -->
     <main id="REGISTER" class="layout-1-column">
-      <h1 class="page-title">ご飯を登録</h1>
-      <a href="registProduct.php">更新</a>
+      <h1 class="page-title">ご飯を<?php if ($edit_flg == 0){echo '登録する';} else{echo '編集する';} ?></h1>
       <!-- メインコンテンツ -->
       <section>
         <div class="form-container large-form">
+          <?php if($edit_flg == 1): ?>
+            <a href="productDetail.php?p_id=<?php echo $product_id; ?>" class="reverse">前ページに戻る</a>
+          <?php endif; ?>
           <form action="" method="post" enctype="multipart/form-data">
             <div class="msg-area"></div>
             <label>
@@ -218,7 +220,7 @@ require('head.php');
             <div class="msg-area"><?php echo getErrMsg('pic'); ?></div>
 
             <div class="btn-container">
-              <input type="submit" value="登録" class="btn btn-mid" />
+              <input type="submit" value="<?php if($edit_flg == 0){echo '登録';}else{echo '編集';} ?>" class="btn btn-mid" />
             </div>
           </form>
         </div>

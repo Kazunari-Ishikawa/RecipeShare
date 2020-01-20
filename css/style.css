@@ -468,3 +468,7 @@ footer p {
   display: inline-block;
   width: 100%;
 }
+.reverse {
+  display: block;
+  float: right;
+}
