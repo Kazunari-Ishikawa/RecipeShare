@@ -52,7 +52,7 @@ if (!empty($_POST)) {
     // カテゴリ
     validSelect($category, 'category_id');
     // 日付
-    validMaxLen($date, 'mate');
+    validMaxLen($date, 'date');
     validRequired($date, 'date');
     // 主菜
     validMaxLen($mainName, 'main-name');
@@ -191,8 +191,8 @@ require('head.php');
             </label>
             <div class="msg-area"><?php echo getErrMsg('category_id'); ?></div>
             <label>
-              <p>作った日</p><span>　記入例：2020年1月1日</span>
-              <input type="text" name="date" value="<?php echo getFormData('date'); ?>" />
+              <p>作った日</p>
+              <input type="date" name="date" value="<?php echo getFormData('date'); ?>" />
             </label>
             <div class="msg-area"><?php echo getErrMsg('date'); ?></div>
             <label>

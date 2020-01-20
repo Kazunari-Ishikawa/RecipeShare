@@ -71,6 +71,7 @@ define('MSG10', '不正な値です');
 define('MSG11', '半角数字のみ利用できます');
 define('MSG12', '現在のパスワードと同じです');
 define('MSG13', '登録されているパスワードと違います');
+define('MSG14', 'カテゴリを選択して下さい');
 
 define('SUC01', 'プロフィールを更新しました');
 define('SUC02', 'パスワードを変更しました');
@@ -161,9 +162,9 @@ function validNum($str, $key) {
 }
 // カテゴリセレクトボックスチェック
 function validSelect($str, $key) {
-  if (!preg_match("/^[0-9]+$/", $str)) {
+  if (!preg_match("/^[1-9]+$/", $str)) {
     global $err_msg;
-    $err_msg[$key] = MSG10;
+    $err_msg[$key] = MSG14;
   }
 }
 
