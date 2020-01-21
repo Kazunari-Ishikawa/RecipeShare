@@ -19,6 +19,18 @@ $(function() {
   $(window).scroll(function() {
     animation();
   });
+
+  // フッターを最下部に固定
+  var $ftr = $("#footer");
+  if (window.innerHeight > $ftr.outerHeight() + $ftr.offset().top) {
+    $ftr.attr({
+      style:
+        "position:fixed; top:" +
+        (window.innerHeight - $ftr.outerHeight()) +
+        "px;"
+    });
+  }
+
   // メッセージ表示
   var $showMsg = $("#js-show-msg");
   var msg = $showMsg.text();
@@ -28,6 +40,7 @@ $(function() {
       $showMsg.slideToggle("slow");
     }, 3000);
   }
+
   // お気に入り登録・解除
   // 変数定義
   var $favorite, favoriteProductId;
@@ -51,6 +64,7 @@ $(function() {
         });
     });
   }
+
   // 料理削除
   var $delete = $(".js-click-delete") || null;
   deleteProductId = $delete.data("productid") || null;

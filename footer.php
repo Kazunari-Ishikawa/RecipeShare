@@ -1,4 +1,4 @@
-    <footer>
+    <footer id="footer">
       <p>
         &copy Copyright 2020 <a href="">わたしのご飯</a> All rights reserved.
       </p>

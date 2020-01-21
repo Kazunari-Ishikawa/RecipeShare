@@ -309,6 +309,7 @@ input[type="checkbox"] {
 footer {
   height: 80px;
   background: #eee;
+  width: 100%;
 }
 footer p {
   font-size: 14px;
