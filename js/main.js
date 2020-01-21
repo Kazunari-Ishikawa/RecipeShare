@@ -41,6 +41,35 @@ $(function() {
     }, 3000);
   }
 
+  // 画像ライブプレビュー
+  var $dropArea = $(".area-drop");
+  var $fileInput = $(".input-file");
+  // ドラッグオーバーでボーダー表示
+  $dropArea.on("dragover", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    $(this).css("border", "3px #ccc dashed");
+  });
+  // ドラッグが離れたらボーダーを消す
+  $dropArea.on("dragleave", function(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    $(this).css("border", "none");
+  });
+  // fileの値が変化した場合
+  $fileInput.on("change", function(e) {
+    $dropArea.css("border", "none");
+    var file = this.files[0],
+      $img = $(this).siblings(".prev-img"),
+      fileReader = new FileReader();
+    // 読み込みが完了した際のイベントハンドラ
+    fileReader.onload = function(e) {
+      $img.attr("src", e.target.result).show();
+    };
+    // 画像読み込み
+    fileReader.readAsDataURL(file);
+  });
+
   // お気に入り登録・解除
   // 変数定義
   var $favorite, favoriteProductId;

@@ -167,7 +167,7 @@ require('head.php');
 
     <!-- メイン -->
     <main id="REGISTER" class="layout-1-column">
-      <h1 class="page-title">ご飯を<?php if ($edit_flg == 0){echo '登録する';} else{echo '編集する';} ?></h1>
+      <h1 class="page-title">ご飯を<?php echo (!$edit_flg) ? '登録する' : '編集する'; ?></h1>
       <!-- メインコンテンツ -->
       <section>
         <div class="form-container large-form">
@@ -212,11 +212,15 @@ require('head.php');
               <textarea name="comment" cols="30" rows="10" style="height:150px;"><?php echo getFormData('comment'); ?></textarea>
             </label>
             <div class="msg-area"><?php echo getErrMsg('comment'); ?></div>
-            <label>
+            <div class="imgDrop-container">
               <p>写真</p>
-              <input type="file" name="pic" accept="image/*" />
-            </label>
-            <img src="<?php echo getFormData('pic'); ?>" alt="" class="prev-img">
+              <label class="area-drop">
+                <input type="hidden" name="MAX_FILE_SIZE" value="3145728">
+                <input type="file" name="pic" accept="image/*" class="input-file" />
+                <img src="<?php echo getFormData('pic'); ?>" alt="" class="prev-img" style="<?php if(empty(getFormData('pic'))) echo 'display:none;'; ?>">
+                ドラッグ＆ドロップ
+              </label>
+            </div>
             <div class="msg-area"><?php echo getErrMsg('pic'); ?></div>
 
             <div class="btn-container">
