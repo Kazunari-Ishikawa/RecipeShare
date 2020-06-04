@@ -121,10 +121,10 @@ require('head.php');
             </label>
             <div class="msg-area"><?php echo getErrMsg('name'); ?></div>
               <p>性別</p>
-            <label>
+            <label style="display:inline-block;">
               <input type="radio" name="sex" value="0" <?php if ($dbUserData['sex'] == 0) echo 'checked'; ?> />男性
             </label>
-            <label >
+            <label style="display:inline-block;">
               <input type="radio" name="sex" value="1" <?php if ($dbUserData['sex'] == 1) echo 'checked'; ?> />女性
             </label>
             <div class="msg-area"><?php echo getErrMsg('sex'); ?></div>
