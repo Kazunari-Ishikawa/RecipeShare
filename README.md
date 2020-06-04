@@ -6,7 +6,11 @@
 
 ## 公開URL
 
-https://kazuishikawa.xsrv.jp/gohan/
+https://kazuishikawa.xsrv.jp/gohan/  
+
+テストユーザー
+Email: test@example.com  
+password: password  
 
 
 ## 背景
@@ -32,6 +36,8 @@ PHPによるWEBサービスの勉強として作成。
 
 
 ## 今後の課題
+
+- 日付昇順、降順などのソート機能
 - レスポンシブ未対応なので対応する
 - 他のユーザーのご飯も見ることができ、それをSNSなどでシェアできるようにする
 
