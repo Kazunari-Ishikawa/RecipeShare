@@ -185,6 +185,7 @@ function dbConnect() {
     // バッファードクエリを使う(一度に結果セットをすべて取得し、サーバー負荷を軽減)
     // SELECTで得た結果に対してもrowCountメソッドを使えるようにする
     PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
+    PDO::ATTR_EMULATE_PREPARES => true, //falseが静的処理
   );
   // PDOオブジェクト作成
   $dbh = new PDO($dsn, $user, $password, $options);
