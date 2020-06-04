@@ -174,9 +174,9 @@ function validSelect($str, $key) {
 // データベース接続関数
 function dbConnect() {
   // 初期設定
-  $dsn = 'mysql:dbname=recipe;host=localhost;charset=utf8';
-  $user = 'root';
-  $password = 'root';
+  $dsn = 'mysql:dbname=kazuishikawa_gohan;host=mysql8037.xserver.jp;charset=utf8';
+  $user = 'kazuishikawa_ghn';
+  $password = 'ishikawagohan';
   $options = array(
     // SQL実行失敗時にはエラーコードのみ設定
     PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT,
